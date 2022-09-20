@@ -1,0 +1,25 @@
+﻿<Window x:Class="ASO.Markdown.DialogWindows.InputTwoNumbersDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ASO.Markdown.DialogWindows"
+        mc:Ignorable="d"
+        Title="InputTwoNumbersDialog" Height="100" Width="300" ResizeMode="NoResize">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <TextBox x:Name="NumberOneBox" Height="30" Width="140" PreviewTextInput="NumberBox_PreviewTextInput"/>
+        <TextBox x:Name="NumberTwoBox" Height="30" Width="140" Grid.Column="1"/>
+        <Button x:Name="Ok" Grid.Column="0" Grid.Row="1" Width="100" Height="30" Click="Ok_Click"/>
+        <Button x:Name="Cancel" Grid.Column="1" Grid.Row="1" Width="100" Height="30" Click="Cancel_Click"/>
+
+    </Grid>
+</Window>
