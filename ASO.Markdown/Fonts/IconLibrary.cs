@@ -15,7 +15,17 @@ public enum IconType
     Plus,
     Search,
     Times,
-    User
+    User,
+    Code,
+    Link,
+    Table,
+    Image,
+    Save,
+    File,
+    Question,
+    Undo,
+    Redo,
+    BulletedLis
 }
 
 public static class IconLibrary
@@ -33,7 +43,17 @@ public static class IconLibrary
         [IconType.Plus]         = "\ue90d",
         [IconType.Search]       = "\ue908",
         [IconType.Times]        = "\ue90b",
-        [IconType.User]         = "\ue939"
+        [IconType.User]         = "\ue939",
+        [IconType.Code]         = "\ue9e7",
+        [IconType.Link]         = "\ue9c1",
+        [IconType.Table]        = "\ue969",
+        [IconType.Image]        = "\ue972",
+        [IconType.Save]         = "\ue95b",
+        [IconType.File]         = "\ue958",
+        [IconType.Question]     = "\ue959",
+        [IconType.Undo]         = "\ue94d",
+        [IconType.Redo]         = "\ue938",
+        [IconType.BulletedLis]  = "\ue967"
     };
 }
 

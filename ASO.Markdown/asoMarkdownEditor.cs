@@ -316,28 +316,28 @@ namespace ASO.Markdown
             }
         }
 
-        private MenuItem literalListItem;
+        private MenuItem headingItem;
 
-        private MenuItem LiteralListItem
+        private MenuItem HeadingItem
         {
             get
             {
-                return literalListItem;
+                return headingItem;
             }
 
             set
             {
-                if (literalListItem != null)
+                if (headingItem != null)
                 {
-                    literalListItem.Click -=
-                        new RoutedEventHandler(literalListItem_Click);
+                    headingItem.Click -=
+                        new RoutedEventHandler(headingItem_Click);
                 }
-                literalListItem = value;
+                headingItem = value;
 
-                if (literalListItem != null)
+                if (headingItem != null)
                 {
-                    literalListItem.Click +=
-                        new RoutedEventHandler(literalListItem_Click);
+                    headingItem.Click +=
+                        new RoutedEventHandler(headingItem_Click);
                 }
             }
         }
@@ -510,7 +510,7 @@ namespace ASO.Markdown
             UnderlineItem = GetTemplateChild("UnderlineItem") as MenuItem;
             SaveFileItem = GetTemplateChild("SaveFileItem") as MenuItem;
             CodeBlockItem = GetTemplateChild("CodeBlockItem") as MenuItem;
-            LiteralListItem = GetTemplateChild("LiteralListItem") as MenuItem;
+            HeadingItem = GetTemplateChild("HeadingItem") as MenuItem;
             BulletedListItem = GetTemplateChild("BulletedListItem") as MenuItem;
             NumberedListItem = GetTemplateChild("NumberedListItem") as MenuItem;
             QuoteItem = GetTemplateChild("QuoteItem") as MenuItem;
@@ -543,7 +543,7 @@ namespace ASO.Markdown
             InputTextDialog inputTextDialog = new InputTextDialog("Введите ссылку", "добавить", "отменить");
             if (inputTextDialog.ShowDialog() == true)
             {
-                Text = Text.Insert(SelectionStart, $"![]({inputTextDialog.Text})");
+                SelectedText = Text.Insert(SelectionStart, $"![]({inputTextDialog.Text})");
             }
         }
 
@@ -552,7 +552,7 @@ namespace ASO.Markdown
             InputTextDialog inputTextDialog = new InputTextDialog("Введите ссылку на изображение", "добавить", "отменить");
             if (inputTextDialog.ShowDialog() == true)
             {
-                Text = Text.Insert(SelectionStart, $"[]({inputTextDialog.Text})");
+                SelectedText = $"[]({inputTextDialog.Text})";
             }
         }
 
@@ -584,8 +584,7 @@ namespace ASO.Markdown
                         table += "  |";
                     }
                 }
-
-                Text = Text.Insert(SelectionStart, table);
+                SelectedText = table;
             }
         }
 
@@ -614,19 +613,22 @@ namespace ASO.Markdown
             SelectedText = $"```\n{SelectedText}\n```";
         }
 
-        public void literalListItem_Click(object sender, RoutedEventArgs e)
+        public void headingItem_Click(object sender, RoutedEventArgs e)
         {
-            if(SelectionLength>0)
-            SelectedText = "i. " + SelectedText.Replace("\n", "\ni. ");
-            else
+            int start = SelectionStart;
+            for (int i = start - 1; i >= 0; i--)
             {
-                for(int i = SelectionStart-1; i >= 0; i--)
+                if (Text[i] == '\n')
                 {
-                    if (Text[i] == '\n')
-                    {
-                        Text = Text.Insert(i+1, "i. ");
-                        break;
-                    }
+                    SelectionStart = i + 1;
+                    SelectedText = $"#{SelectedText}";
+                    break;
+                }
+                else if(i == 0)
+                {
+                    SelectionStart = i + 1;
+                    SelectedText = $"#{SelectedText}";
+                    break;
                 }
             }
         }
@@ -659,7 +661,8 @@ namespace ASO.Markdown
 
         public void helpItem_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("help");
+            MarkdownInfoWindow window = new MarkdownInfoWindow();
+            window.Show();
         }
     }
 }

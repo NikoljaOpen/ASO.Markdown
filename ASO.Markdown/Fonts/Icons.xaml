@@ -4,6 +4,6 @@
                     xmlns:converters="clr-namespace:ASO.Markdown">
 
     <converters:IconConverter x:Key="IconConverter"/>
-    
-    <FontFamily x:Key="PrimeIcons">/Aso.Markdown;Fonts/#primeicons</FontFamily>
+
+    <FontFamily x:Key="PrimeIcons">/ASO.Markdown;component/Fonts/#primeicons</FontFamily>
 </ResourceDictionary>
