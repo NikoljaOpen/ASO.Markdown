@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Windows;
+using System.Windows.Media.Animation;
 using ASO.Markdown;
 using Markdig;
 using Markdig.Wpf;
@@ -19,6 +20,8 @@ namespace ASO.MarkdownTesting
         private void Editor_TextChanged(object sender, System.EventArgs e)
         {
             Viewer.Markdown = Editor.Text;
+            var html = Markdig.Markdown.ToHtml(Editor.Text);
+            Web.NavigateToString(html);
         }
     }
 }

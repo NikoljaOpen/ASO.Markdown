@@ -12,8 +12,10 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition/>
+            <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <controls:AsoMarkdownEditor Name="Editor" TextChanged="Editor_TextChanged"/>
         <controls:AsoMarkdownViewer x:Name="Viewer" Grid.Column="1"/>
+        <WebBrowser x:Name="Web" Grid.Column="2"/>
     </Grid>
 </Window>
