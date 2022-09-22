@@ -5,12 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ASO.MarkdownTesting"
         xmlns:aso="clr-namespace:ASO.Markdown;assembly=ASO.Markdown"
-        xmlns:controls="clr-namespace:ASO.Markdown;assembly=ASO.Markdown"
+        xmlns:controls="clr-namespace:ASO.Markdown.Controls;assembly=ASO.Markdown"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid Margin="10">
-        <aso:asoMarkdownEditor/>
-    <Grid>
-        <controls:AsoMarkdownViewer Name="Viewer"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <controls:AsoMarkdownEditor Name="Editor" TextChanged="Editor_TextChanged"/>
+        <controls:AsoMarkdownViewer x:Name="Viewer" Grid.Column="1"/>
     </Grid>
 </Window>

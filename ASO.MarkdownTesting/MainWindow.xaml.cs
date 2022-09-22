@@ -14,15 +14,11 @@ namespace ASO.MarkdownTesting
         public MainWindow()
         {
             InitializeComponent();
-
-            Loaded += OnLoaded;
         }
 
-        private void OnLoaded(object sender, RoutedEventArgs e)
+        private void Editor_TextChanged(object sender, System.EventArgs e)
         {
-            var path = "../../../Documents/Markdig-readme.md";
-
-            Viewer.Path = path;
+            Viewer.Markdown = Editor.Text;
         }
     }
 }

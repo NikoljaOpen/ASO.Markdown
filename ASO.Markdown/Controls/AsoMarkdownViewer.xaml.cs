@@ -6,54 +6,53 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Shapes;
 
-namespace ASO.Markdown;
-
-public partial class AsoMarkdownViewer : UserControl
+namespace ASO.Markdown.Controls
 {
-    private string _Path = string.Empty;
-    public string Path
+
+    public partial class AsoMarkdownViewer : UserControl
     {
-        get { return _Path; }
-        set
+        private string _Path = string.Empty;
+        public string Path
         {
-            _Path = value;
-            Markdown = File.ReadAllText(_Path);
+            get { return _Path; }
+            set
+            {
+                _Path = value;
+                Markdown = File.ReadAllText(_Path);
+            }
         }
-    }
 
-    private string? _Markdown = string.Empty;
-    public string? Markdown
-    {
-        get { return _Markdown; }
-        set
+        private string? _Markdown = string.Empty;
+        public string? Markdown
         {
-            _Markdown = value;
-            Viewer.Markdown = _Markdown;
+            get { return _Markdown; }
+            set
+            {
+                _Markdown = value;
+                Viewer.Markdown = _Markdown;
+            }
         }
-    }
 
 
-    public AsoMarkdownViewer()
-    {
-        InitializeComponent();
+        public AsoMarkdownViewer()
+        {
+            InitializeComponent();
 
-        Viewer.Pipeline = new MarkdownPipelineBuilder()
-            .UseSupportedExtensions()
-            .UseBootstrap()
-            .UseMediaLinks()
-            .UseEmojiAndSmiley()
-            .Build();
-    }
+            Viewer.Pipeline = new MarkdownPipelineBuilder()
+                .UseSupportedExtensions()
+                .UseBootstrap()
+                .UseEmojiAndSmiley()
+                .Build();
+        }
 
-    private void OpenHyperlink(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
-    {
-        MessageBox.Show($"URL: {e.Parameter}");
-        //Process.Start(e.Parameter.ToString());
-    }
+        private void OpenHyperlink(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
+        {
+            Process.Start("cmd", $"/c start {e.Parameter}");
+        }
 
-    private void ClickOnImage(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
-    {
-        MessageBox.Show($"URL: {e.Parameter}");
+        private void ClickOnImage(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
+        {
+            MessageBox.Show($"URL: {e.Parameter}");
+        }
     }
 }
-

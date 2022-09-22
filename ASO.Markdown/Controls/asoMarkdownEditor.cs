@@ -18,7 +18,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ASO.Markdown
+namespace ASO.Markdown.Controls
 {
     /// <summary>
     /// Выполните шаги 1a или 1b, а затем 2, чтобы использовать этот пользовательский элемент управления в файле XAML.
@@ -49,11 +49,11 @@ namespace ASO.Markdown
     ///     <MyNamespace:asoTextEditor/>
     ///
     /// </summary>
-    public class asoMarkdownEditor : TextEditor
+    public class AsoMarkdownEditor : TextEditor
     {
-        static asoMarkdownEditor()
+        static AsoMarkdownEditor()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(asoMarkdownEditor), new FrameworkPropertyMetadata(typeof(asoMarkdownEditor)));
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(AsoMarkdownEditor), new FrameworkPropertyMetadata(typeof(AsoMarkdownEditor)));
         }
 
         private MenuItem openFileItem;
@@ -524,17 +524,17 @@ namespace ASO.Markdown
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "Файлы Markdown  (*.md)|*.md";
             if (openFileDialog.ShowDialog() == true)
-                this.Text = File.ReadAllText(openFileDialog.FileName);
+                Text = File.ReadAllText(openFileDialog.FileName);
         }
 
         public void saveFileItemItem_Click(object sender, RoutedEventArgs e)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.Filter = "Файлы Markdown  (*.md)|*.md";
-            if(saveFileDialog.ShowDialog() == true)
+            if (saveFileDialog.ShowDialog() == true)
             {
                 string filename = saveFileDialog.FileName;
-                File.WriteAllText(filename, this.Text);
+                File.WriteAllText(filename, Text);
             }
         }
 
@@ -543,7 +543,7 @@ namespace ASO.Markdown
             InputTextDialog inputTextDialog = new InputTextDialog("Введите ссылку", "добавить", "отменить");
             if (inputTextDialog.ShowDialog() == true)
             {
-                SelectedText = Text.Insert(SelectionStart, $"![]({inputTextDialog.Text})");
+                SelectedText = $"![]({inputTextDialog.Text})";
             }
         }
 
@@ -616,21 +616,31 @@ namespace ASO.Markdown
         public void headingItem_Click(object sender, RoutedEventArgs e)
         {
             int start = SelectionStart;
-            for (int i = start - 1; i >= 0; i--)
+            if (start == 0)
             {
-                if (Text[i] == '\n')
+                SelectedText = $"# {SelectedText}";
+            }
+            else
+            {
+                for (int i = start - 1; i >= 0; i--)
                 {
-                    SelectionStart = i + 1;
-                    SelectedText = $"#{SelectedText}";
-                    break;
-                }
-                else if(i == 0)
-                {
-                    SelectionStart = i + 1;
-                    SelectedText = $"#{SelectedText}";
-                    break;
+                    if (Text[i] == '\n')
+                    {
+                        SelectionStart = i + 1;
+                        SelectedText = $"# {SelectedText}";
+                        break;
+                    }
+                    else if (i == 0)
+                    {
+                        SelectionStart = i;
+                        SelectedText = $"# {SelectedText}";
+                        break;
+                    }
                 }
             }
+            int length = SelectionLength;
+            this.SelectionLength = 0;
+            SelectionStart = length;
         }
 
         public void numberedListItem_Click(object sender, RoutedEventArgs e)
