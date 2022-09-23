@@ -3,9 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ASO.MarkdownTesting"
-        xmlns:aso="clr-namespace:ASO.Markdown;assembly=ASO.Markdown"
-        xmlns:controls="clr-namespace:ASO.Markdown.Controls;assembly=ASO.Markdown"
+        xmlns:controls="clr-namespace:ASO.Markdown.Controls;assembly=ASO.Markdown" 
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid Margin="10">
@@ -16,6 +14,6 @@
         </Grid.ColumnDefinitions>
         <controls:AsoMarkdownEditor Name="Editor" TextChanged="Editor_TextChanged"/>
         <controls:AsoMarkdownViewer x:Name="Viewer" Grid.Column="1"/>
-        <WebBrowser x:Name="Web" Grid.Column="2"/>
+        <controls:AsoMarkdownWebViewer x:Name="Web" Grid.Column="2"/>
     </Grid>
 </Window>

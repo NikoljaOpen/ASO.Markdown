@@ -2,14 +2,13 @@
 using System.Windows;
 using System.Windows.Media.Animation;
 using ASO.Markdown;
+using ASO.Markdown.Controls;
 using Markdig;
 using Markdig.Wpf;
+using Microsoft.Web.WebView2.Core;
 
 namespace ASO.MarkdownTesting
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
@@ -20,8 +19,7 @@ namespace ASO.MarkdownTesting
         private void Editor_TextChanged(object sender, System.EventArgs e)
         {
             Viewer.Markdown = Editor.Text;
-            var html = Markdig.Markdown.ToHtml(Editor.Text);
-            Web.NavigateToString(html);
+            Web.Markdown = Editor.Text;
         }
     }
 }
