@@ -12,6 +12,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Forms.VisualStyles;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -55,6 +56,15 @@ namespace ASO.Markdown.Controls
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(AsoMarkdownEditor), new FrameworkPropertyMetadata(typeof(AsoMarkdownEditor)));
         }
+
+        public AsoMarkdownEditor()
+        {
+            BrushConverter bc = new BrushConverter();
+            MenuBackground = (Brush)bc.ConvertFrom("#F8F9FA");
+        }
+
+        public Brush MenuBackground { get; set; }
+        public Thickness MenuBorderThickness { get; set; }
 
         private MenuItem openFileItem;
 

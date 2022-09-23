@@ -16,9 +16,10 @@ namespace ASO.MarkdownTesting
             InitializeComponent();
         }
 
-        private void Editor_TextChanged(object sender, System.EventArgs e)
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Viewer.Markdown = Editor.Text;
+            QuestionWindow questionWindow = new QuestionWindow(Editor.Markdown, Answers.Answers);
+            questionWindow.Show();
         }
     }
 }

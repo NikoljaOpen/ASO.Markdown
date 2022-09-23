@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:ASO.Markdown.DialogWindows"
         xmlns:controls="clr-namespace:ASO.Markdown.Controls"
         mc:Ignorable="d"
-        Title="Пособие по Markdown" Height="450" Width="800" Loaded="Window_Loaded">
+        Title="Пособие по Markdown" Height="450" Width="800" Loaded="Window_Loaded" Icon="/ASO.Markdown;component/MarkdownInfoFiles/keyboard.png">
     <Grid>
         <controls:AsoMarkdownViewer x:Name="Viewer"/>
     </Grid>
