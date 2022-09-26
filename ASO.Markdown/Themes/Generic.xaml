@@ -143,8 +143,14 @@
 
                         <controls:AsoMarkdownEditor BorderThickness="1" BorderBrush="Silver" MenuBorderThickness="0 0 0 1" x:Name="Editor"/>
                         <GridSplitter Background="Transparent" Width="5" Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Center"/>
-                        <controls:AsoMarkdownViewer Grid.Column="2" BorderThickness="1" BorderBrush="Silver" x:Name="Viewer"/>
-
+                        <TabControl Grid.Column="2">
+                            <TabItem Header="XAML">
+                                <controls:AsoMarkdownViewer BorderThickness="1" BorderBrush="Silver" x:Name="Viewer"/>
+                            </TabItem>
+                            <TabItem Header="HTML">
+                                <controls:AsoMarkdownWebViewer BorderThickness="1" BorderBrush="Silver" x:Name="WebViewer"/>
+                            </TabItem>
+                        </TabControl>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

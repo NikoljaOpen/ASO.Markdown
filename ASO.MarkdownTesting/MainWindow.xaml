@@ -7,14 +7,6 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid Margin="10">
-
-        <Grid.ColumnDefinitions>
-            
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-
-        </Grid.RowDefinitions>
-
         <controls:AsoMarkdownDocumentEditor/>
     </Grid>
 </Window>
