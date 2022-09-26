@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
+using System.IO;
 using System.Windows;
 using System.Windows.Media.Animation;
 using ASO.Markdown;
@@ -16,10 +17,15 @@ namespace ASO.MarkdownTesting
             InitializeComponent();
         }
 
-        private void Editor_TextChanged(object sender, System.EventArgs e)
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Viewer.Markdown = Editor.Text;
-            Web.Markdown = Editor.Text;
+            
+            
+        }
+
+        private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+        {
+            Process.Start("cmd", $"/c start {e.Uri}");
         }
     }
 }

@@ -7,13 +7,14 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid Margin="10">
+
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
+            
         </Grid.ColumnDefinitions>
-        <controls:AsoMarkdownEditor Name="Editor" TextChanged="Editor_TextChanged"/>
-        <controls:AsoMarkdownViewer x:Name="Viewer" Grid.Column="1"/>
-        <controls:AsoMarkdownWebViewer x:Name="Web" Grid.Column="2"/>
+        <Grid.RowDefinitions>
+
+        </Grid.RowDefinitions>
+
+        <controls:AsoMarkdownDocumentEditor/>
     </Grid>
 </Window>

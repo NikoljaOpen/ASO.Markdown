@@ -9,6 +9,8 @@
   <ItemGroup>
     <None Remove="Fonts\primeicons.ttf" />
     <None Remove="MarkdownInfoFiles\home.md" />
+    <None Remove="MarkdownInfoFiles\keyboard.png" />
+    <None Remove="MarkdownInfoFiles\question.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,6 +26,8 @@
 
   <ItemGroup>
     <Resource Include="Fonts\primeicons.ttf" />
+    <Resource Include="MarkdownInfoFiles\keyboard.png" />
+    <Resource Include="MarkdownInfoFiles\question.png" />
   </ItemGroup>
 
   <ItemGroup>

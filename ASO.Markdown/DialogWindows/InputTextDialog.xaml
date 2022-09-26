@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ASO.Markdown.DialogWindows"
         mc:Ignorable="d"
-        Title="InputTextDialog" Height="100" Width="300" ResizeMode="NoResize">
+        Title="InputTextDialog" Height="100" Width="300" ResizeMode="NoResize" Icon="/ASO.Markdown;component/MarkdownInfoFiles/keyboard.png">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
