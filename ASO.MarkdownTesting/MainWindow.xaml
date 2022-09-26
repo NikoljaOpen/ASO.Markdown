@@ -14,13 +14,9 @@
             
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition Height="50"/>
+
         </Grid.RowDefinitions>
 
-        <controls:AsoMarkdownDocumentEditor Name="Editor"/>
-        <controls:AsoAnswerEditor Name="Answers" Grid.Row="1" BorderThickness="1" BorderBrush="Silver" Margin="0 5 0 0" Background="#F8F9FA"/>
-        <Button Content="проверка" Grid.Row="2" Height="30" Width="60" Click="Button_Click"/>
+        <controls:AsoMarkdownDocumentEditor/>
     </Grid>
 </Window>

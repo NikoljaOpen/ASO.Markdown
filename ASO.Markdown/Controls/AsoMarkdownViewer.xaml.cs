@@ -52,7 +52,7 @@ namespace ASO.Markdown.Controls
 
         private void ClickOnImage(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
         {
-            MessageBox.Show($"URL: {e.Parameter}");
+            Process.Start("cmd", $"/c start {e.Parameter}");
         }
     }
 }

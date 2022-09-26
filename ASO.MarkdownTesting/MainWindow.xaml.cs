@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
+using System.IO;
 using System.Windows;
 using ASO.Markdown;
 using Markdig;
@@ -18,8 +19,13 @@ namespace ASO.MarkdownTesting
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            QuestionWindow questionWindow = new QuestionWindow(Editor.Markdown, Answers.Answers);
-            questionWindow.Show();
+            
+            
+        }
+
+        private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+        {
+            Process.Start("cmd", $"/c start {e.Uri}");
         }
     }
 }

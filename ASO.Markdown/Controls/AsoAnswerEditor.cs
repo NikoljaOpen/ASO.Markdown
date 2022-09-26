@@ -32,7 +32,6 @@ namespace ASO.Markdown.Controls
                 return answerList;
             }
         }
-
         private StackPanel answersListView;
         private StackPanel AnswersListView
         {
