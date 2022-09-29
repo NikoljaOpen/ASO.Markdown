@@ -22,9 +22,4 @@
     <ProjectReference Include="..\ASO.Markdown\ASO.Markdown.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Resource Include="test.gif" />
-    <Resource Include="testt.gif" />
-  </ItemGroup>
-
 </Project>

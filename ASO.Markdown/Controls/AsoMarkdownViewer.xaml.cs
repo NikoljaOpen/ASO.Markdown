@@ -1,4 +1,5 @@
-﻿using Markdig;
+﻿using ASO.Markdown.Extensions;
+using Markdig;
 using Markdig.Wpf;
 using System;
 using System.Diagnostics;
@@ -83,13 +84,14 @@ public partial class AsoMarkdownViewer : UserControl
     private void ClickOnImage(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
     {
         var par = e.Parameter as string ?? string.Empty;
-        
+
         if (par != string.Empty)
-        {
-            var query = LinkExtractor(par);
-            //MessageBox.Show($"URL: {query}");
-            Process.Start("cmd", $"/c start {query}");
-        }
+            Process.Start("cmd", $"/c start {par}");
+        //if (par != string.Empty)
+        //{
+        //    var query = LinkExtractor(par);
+        //    Process.Start("cmd", $"/c start {query}");
+        //}
     }
 
     /// <summary>
