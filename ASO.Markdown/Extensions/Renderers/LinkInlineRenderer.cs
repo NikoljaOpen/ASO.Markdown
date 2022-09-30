@@ -32,13 +32,11 @@ public class LinkInlineRenderer : Markdig.Renderers.Wpf.Inlines.LinkInlineRender
             image.SetResourceReference(FrameworkContentElement.StyleProperty, Styles.ImageStyleKey);
             template.VisualTree = image;
 
-            var a = link.Parent.GetType().ToString();
-            var url_ = link.Parent is LinkInline ? ((LinkInline)link.Parent).Url : url;
+            var url_ = link.Parent is LinkInline ? ((LinkInline)link.Parent).Url : url; //Привязанная ссылка. Если привязка отсутствует, вернет ссылку на источник ресурса
             var btn = new Button()
             {
                 Template = template,
                 Command = Commands.Image,
-                //CommandParameter = url
                 CommandParameter = url_
             };
 

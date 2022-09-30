@@ -13,25 +13,14 @@ namespace ASO.Markdown.Controls;
 
 public partial class AsoMarkdownViewer : UserControl
 {
-    private string _Path = string.Empty;
-    public string Path
-    {
-        get { return _Path; }
-        set
-        {
-            _Path = value;
-            Markdown = File.ReadAllText(_Path);
-        }
-    }
-
-    private string? _Markdown = string.Empty;
+    private string? _markdown = string.Empty;
     public string? Markdown
     {
-        get { return _Markdown; }
+        get { return _markdown; }
         set
         {
-            _Markdown = value;
-            Viewer.Markdown = _Markdown;
+            _markdown = value;
+            Viewer.Markdown = _markdown;
         }
     }
 
@@ -76,43 +65,11 @@ public partial class AsoMarkdownViewer : UserControl
             .Build();
     }
 
-    private void OpenHyperlink(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
-    {
-        Process.Start("cmd", $"/c start {e.Parameter}");
-    }
-
-    private void ClickOnImage(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
+    private void OpenLink(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
     {
         var par = e.Parameter as string ?? string.Empty;
 
         if (par != string.Empty)
             Process.Start("cmd", $"/c start {par}");
-        //if (par != string.Empty)
-        //{
-        //    var query = LinkExtractor(par);
-        //    Process.Start("cmd", $"/c start {query}");
-        //}
-    }
-
-    /// <summary>
-    /// Извлекает ссылку привязанную к картинке
-    /// </summary>
-    /// <param name="key"></param>
-    /// <returns></returns>
-    private string LinkExtractor(string key)
-    {
-        var result = string.Empty;
-
-        if (Markdown != null)
-        {
-            var pattern = $"(?:{key})[)][]][(](.*)[)]";
-            var match = Regex.Match(Markdown, pattern);
-            if (match.Success)
-            {
-                result = match.Groups[1].Value;
-            }
-        }
-
-        return result;
     }
 }

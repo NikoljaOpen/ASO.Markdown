@@ -26,7 +26,7 @@ public partial class AsoMarkdownWebViewer : UserControl
         set { _Pipeline = value; }
     }
 
-    private string? _Markdown = string.Empty;
+    private string? _Markdown;
     public string? Markdown
     {
         get { return _Markdown; }
@@ -35,7 +35,6 @@ public partial class AsoMarkdownWebViewer : UserControl
             _Markdown = value;
 
             var html = Markdig.Markdown.ToHtml(_Markdown, _Pipeline);
-            
             Viewer.NavigateToString(html);
         }
     }

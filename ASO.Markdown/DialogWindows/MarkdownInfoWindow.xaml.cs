@@ -28,7 +28,8 @@ namespace ASO.Markdown.DialogWindows
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            Viewer.Path = "MarkdownInfoFiles/home.md";
+            var text = File.ReadAllText("MarkdownInfoFiles/home.md");
+            Viewer.Markdown = text;
         }
     }
 }

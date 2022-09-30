@@ -10,7 +10,7 @@ xmlns:extensions="clr-namespace:ASO.Markdown.Extensions"
     <extensions:MarkdownViewer x:Name="Viewer"/>
 
     <FrameworkElement.CommandBindings>
-        <CommandBinding Command="{x:Static markdig:Commands.Hyperlink}" Executed="OpenHyperlink" />
-        <CommandBinding Command="{x:Static markdig:Commands.Image}" Executed="ClickOnImage" />
+        <CommandBinding Command="{x:Static markdig:Commands.Hyperlink}" Executed="OpenLink" />
+        <CommandBinding Command="{x:Static markdig:Commands.Image}" Executed="OpenLink" />
     </FrameworkElement.CommandBindings>
 </UserControl>

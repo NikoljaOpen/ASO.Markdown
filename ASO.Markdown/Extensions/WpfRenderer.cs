@@ -6,10 +6,6 @@ namespace ASO.Markdown.Extensions;
 
 public class WpfRenderer : Markdig.Renderers.WpfRenderer
 {
-    /// <summary>
-    /// Initializes the WPF renderer
-    /// </summary>
-    /// <param name="linkpath">image path for the custom LinkInlineRenderer</param>
     public WpfRenderer() : base()
     {
 
