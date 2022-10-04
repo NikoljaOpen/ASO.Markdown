@@ -17,15 +17,9 @@ namespace ASO.MarkdownTesting
             InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            
-            
-        }
-
-        private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
-        {
-            Process.Start("cmd", $"/c start {e.Uri}");
+            Viewer.Markdown = File.ReadAllText(@"C:\Users\nikol\Downloads\Пример.md");
         }
     }
 }

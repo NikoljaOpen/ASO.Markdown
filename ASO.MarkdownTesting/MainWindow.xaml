@@ -7,7 +7,7 @@
         xmlns:aso="clr-namespace:ASO.Markdown;assembly=ASO.Markdown"
         xmlns:controls="clr-namespace:ASO.Markdown.Controls;assembly=ASO.Markdown"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800" Loaded="Window_Loaded">
     <Grid Margin="10">
 
         <Grid.ColumnDefinitions>
@@ -17,6 +17,8 @@
 
         </Grid.RowDefinitions>
 
-        <controls:AsoMarkdownDocumentEditor/>
+        <controls:AsoMarkdownViewer x:Name="Viewer"/>
+
+
     </Grid>
 </Window>

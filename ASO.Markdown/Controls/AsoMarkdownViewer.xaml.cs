@@ -1,9 +1,17 @@
 ﻿using Markdig;
 using Markdig.Wpf;
+using Neo.Markdig.Xaml;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Reflection.Metadata;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace ASO.Markdown.Controls
@@ -11,48 +19,44 @@ namespace ASO.Markdown.Controls
 
     public partial class AsoMarkdownViewer : UserControl
     {
-        private string _Path = string.Empty;
-        public string Path
-        {
-            get { return _Path; }
-            set
-            {
-                _Path = value;
-                Markdown = File.ReadAllText(_Path);
-            }
-        }
 
-        private string? _Markdown = string.Empty;
+        private string? markdown = string.Empty;
         public string? Markdown
         {
-            get { return _Markdown; }
+            get { return markdown; }
             set
             {
-                _Markdown = value;
-                Viewer.Markdown = _Markdown;
+                var doc = MarkdownXaml.ToFlowDocument(
+                            value,
+                            new MarkdownPipelineBuilder()
+                            .UseXamlSupportedExtensions()
+                            .Build()
+                );
+                ScrollViewer.Document = doc;
+
+                markdown = value;
             }
         }
-
 
         public AsoMarkdownViewer()
         {
             InitializeComponent();
-
-            Viewer.Pipeline = new MarkdownPipelineBuilder()
-                .UseSupportedExtensions()
-                .UseBootstrap()
-                .UseEmojiAndSmiley()
-                .Build();
         }
 
-        private void OpenHyperlink(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
+        private void CommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            Process.Start("cmd", $"/c start {e.Parameter}");
+            Process.Start(new ProcessStartInfo("cmd", $"/c start {e.Parameter}") { CreateNoWindow = true });
         }
 
-        private void ClickOnImage(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
+
+        public static IEnumerable<DependencyObject> GetVisuals(DependencyObject root)
         {
-            Process.Start("cmd", $"/c start {e.Parameter}");
+            foreach (var child in LogicalTreeHelper.GetChildren(root).OfType<DependencyObject>())
+            {
+                yield return child;
+                foreach (var descendants in GetVisuals(child))
+                    yield return descendants;
+            }
         }
     }
 }

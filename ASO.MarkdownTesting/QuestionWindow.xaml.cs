@@ -31,9 +31,7 @@ namespace ASO.MarkdownTesting
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            QuestionTextView.Markdown = QuestionText;
-            AnswerList.ItemsSource = Answers;
-            AnswerList.Items.Refresh();
+            
         }
     }
 }
