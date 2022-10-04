@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows;
 using ASO.Markdown;
+using ASO.Markdown.MarkdownServise;
 using Markdig;
 using Markdig.Wpf;
 
@@ -19,7 +20,13 @@ namespace ASO.MarkdownTesting
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            Viewer.Markdown = File.ReadAllText(@"C:\Users\nikol\Downloads\Пример.md");
+            
+        }
+
+        private void AsoRichEditor_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            string mark = FlowDocumentToMarkdown.Parse(Editor.Document);
+            Viewer.Markdown = mark;
         }
     }
 }

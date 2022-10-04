@@ -9,7 +9,7 @@ namespace ASO.Markdown.MarkdownServise
     {
         public static string Parse(FlowDocument document)
         {
-            return ParseBloks(document.Blocks);
+            return ParseBloks(document.Blocks,true);
         }
 
         public static string ParseBloks(BlockCollection blocks, bool wraping = false, int l = 0, string secton = "")

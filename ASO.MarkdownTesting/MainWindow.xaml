@@ -11,13 +11,16 @@
     <Grid Margin="10">
 
         <Grid.ColumnDefinitions>
-            
+            <ColumnDefinition/>
+            <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
 
         </Grid.RowDefinitions>
 
-        <controls:AsoMarkdownViewer x:Name="Viewer"/>
+        <controls:AsoRichEditor Name="Editor" TextChanged="AsoRichEditor_TextChanged"/>
+
+        <controls:AsoMarkdownViewer x:Name="Viewer" Grid.Column="1"/>
 
 
     </Grid>
