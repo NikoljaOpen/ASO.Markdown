@@ -3,6 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:ASO.Markdown"
     xmlns:controls="clr-namespace:ASO.Markdown.Controls" 
+    xmlns:md="clr-namespace:Neo.Markdig.Xaml;assembly=Neo.Markdig.Xaml"
     xmlns:models="clr-namespace:ASO.Markdown.Models">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/ASO.Markdown;component/Fonts/Icons.xaml"/>
@@ -144,10 +145,13 @@
                         <controls:AsoMarkdownEditor BorderThickness="1" BorderBrush="Silver" MenuBorderThickness="0 0 0 1" x:Name="Editor"/>
                         <GridSplitter Background="Transparent" Width="5" Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Center"/>
                         <TabControl Grid.Column="2">
-                            <TabItem Header="XAML">
+                            <TabItem Header="NovaMarkdownViewer">
+                                <controls:NovaMarkdownViewer x:Name="NovaViewer"/>
+                            </TabItem>
+                            <TabItem Header="AsoMarkdownViewer">
                                 <controls:AsoMarkdownViewer BorderThickness="1" BorderBrush="Silver" x:Name="Viewer"/>
                             </TabItem>
-                            <TabItem Header="HTML">
+                            <TabItem Header="AsoMarkdownWebViewer">
                                 <controls:AsoMarkdownWebViewer BorderThickness="1" BorderBrush="Silver" x:Name="WebViewer"/>
                             </TabItem>
                         </TabControl>
@@ -197,5 +201,27 @@
             </Setter.Value>
         </Setter>
         <Setter Property="Margin" Value="5 10 5 10"/>
+    </Style>
+
+    <Style TargetType="{x:Type controls:NeoMarkdownViewer}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:NeoMarkdownViewer}">
+                    <Grid>
+                        <FlowDocumentScrollViewer x:Name="NeoViewer">
+                            <FlowDocumentScrollViewer.CommandBindings>
+                                <CommandBinding Command="{x:Static md:MarkdownXaml.Hyperlink}"/>
+                            </FlowDocumentScrollViewer.CommandBindings>
+                        </FlowDocumentScrollViewer>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    
+    <Style TargetType="{x:Type Hyperlink}" x:Key="{x:Static md:MarkdownXaml.HyperlinkStyleKey}">
+        <Setter Property="Command" Value="{x:Static md:MarkdownXaml.Hyperlink}" />
+        <Setter Property="CommandParameter" Value="{Binding RelativeSource={RelativeSource Self}, Path=NavigateUri}" />
     </Style>
 </ResourceDictionary>
