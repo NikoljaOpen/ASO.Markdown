@@ -51,19 +51,19 @@ namespace ASO.Markdown.Controls
             }
         }
 
-        private AsoMarkdownViewer AsoMarkdownViewer;
-        private NovaMarkdownViewer NovaMarkdownViewer;
+        private AsoMarkdownViewer? _asoMarkdownViewer;
+        private NovaMarkdownViewer? _novaMarkdownViewer;
         private void asoMarkdownEditor_TextChanged(object sender, EventArgs e)
         {
-            if (AsoMarkdownViewer != null) AsoMarkdownViewer.Markdown = AsoMarkdownEditor.Text;
-            if (NovaMarkdownViewer != null) NovaMarkdownViewer.Markdown = AsoMarkdownEditor.Text;
+            if (_asoMarkdownViewer != null) _asoMarkdownViewer.Markdown = AsoMarkdownEditor.Text;
+            if (_novaMarkdownViewer != null) _novaMarkdownViewer.Markdown = AsoMarkdownEditor.Text;
         }
 
         public override void OnApplyTemplate()
         {
             AsoMarkdownEditor = GetTemplateChild("Editor") as AsoMarkdownEditor;
-            AsoMarkdownViewer = GetTemplateChild("Viewer") as AsoMarkdownViewer;
-            NovaMarkdownViewer = GetTemplateChild("NovaViewer") as NovaMarkdownViewer;
+            _asoMarkdownViewer = GetTemplateChild("Viewer") as AsoMarkdownViewer;
+            _novaMarkdownViewer = GetTemplateChild("NovaViewer") as NovaMarkdownViewer;
         }
 
         static AsoMarkdownDocumentEditor()

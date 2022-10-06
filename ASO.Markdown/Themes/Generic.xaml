@@ -203,22 +203,6 @@
         <Setter Property="Margin" Value="5 10 5 10"/>
     </Style>
 
-    <Style TargetType="{x:Type controls:NeoMarkdownViewer}">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type controls:NeoMarkdownViewer}">
-                    <Grid>
-                        <FlowDocumentScrollViewer x:Name="NeoViewer">
-                            <FlowDocumentScrollViewer.CommandBindings>
-                                <CommandBinding Command="{x:Static md:MarkdownXaml.Hyperlink}"/>
-                            </FlowDocumentScrollViewer.CommandBindings>
-                        </FlowDocumentScrollViewer>
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
     
     <Style TargetType="{x:Type Hyperlink}" x:Key="{x:Static md:MarkdownXaml.HyperlinkStyleKey}">
         <Setter Property="Command" Value="{x:Static md:MarkdownXaml.Hyperlink}" />
