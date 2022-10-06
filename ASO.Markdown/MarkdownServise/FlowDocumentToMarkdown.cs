@@ -7,6 +7,8 @@ namespace ASO.Markdown.MarkdownServise
 {
     public static class FlowDocumentToMarkdown
     {
+        
+
         public static string Parse(FlowDocument document)
         {
             return ParseBloks(document.Blocks,true);
@@ -163,30 +165,30 @@ namespace ASO.Markdown.MarkdownServise
                         string currentString = run.Text;
                         if (run.FontWeight == FontWeights.Bold && run.FontSize == 12)
                         {
-                            currentString = $"**{currentString}**";
+                            currentString = $"**{currentString.TrimEnd()}** ";
                         }
                         if (run.FontStyle == FontStyles.Italic)
                         {
-                            currentString = $"*{currentString}*";
+                            currentString = $"*{currentString.TrimEnd()}* ";
                         }
                         if (run.TextDecorations.Equals(TextDecorations.Underline))
                         {
-                            currentString = $"++{currentString}++";
+                            currentString = $"++{currentString.TrimEnd()}++ ";
                         }
                         if (run.TextDecorations.Equals(TextDecorations.Strikethrough))
                         {
-                            currentString = $"~~{currentString}~~";
+                            currentString = $"~~{currentString.TrimEnd()}~~ ";
                         }
                         text += $"{br}{currentString}";
 
                         break;
 
                     case "Bold":
-                        text += $"**{ParseInlines(((Bold)inline).Inlines, false)}**";
+                        text += $"**{ParseInlines(((Bold)inline).Inlines, false)}** ";
                         break;
 
                     case "Italic":
-                        text += $"*{ParseInlines(((Italic)inline).Inlines, false)}*";
+                        text += $"*{ParseInlines(((Italic)inline).Inlines, false)}* ";
                         break;
                     case "Span":
                         Span span = ((Span)inline);
@@ -196,11 +198,11 @@ namespace ASO.Markdown.MarkdownServise
                             {
                                 if (textDecoration.Location == TextDecorationLocation.Underline)
                                 {
-                                    text += $"++{ParseInlines(span.Inlines, false)}++";
+                                    text += $"++{ParseInlines(span.Inlines, false)}++ ";
                                 }
                                 else if (textDecoration.Location == TextDecorationLocation.Strikethrough)
                                 {
-                                    text += $"~~{ParseInlines(span.Inlines, false)}~~";
+                                    text += $"~~{ParseInlines(span.Inlines, false)}~~ ";
                                 }
                                 else
                                 {
@@ -210,24 +212,27 @@ namespace ASO.Markdown.MarkdownServise
                         }
                         else if (span.FontFamily.Equals(new FontFamily("Consolas, Lucida Sans Typewriter, Courier New")))
                         {
-                            text += $"`{ParseInlines(span.Inlines, false)}`";
+                            text += $"`{ParseInlines(span.Inlines, false)}` ";
                         }
                         else
                         {
-                            text += $"=={ParseInlines(span.Inlines, false)}==";
+                            text += $"=={ParseInlines(span.Inlines, false)}== ";
                         }
                         break;
 
                     case "Hyperlink":
                         Hyperlink link = ((Hyperlink)inline);
-                        text += $"[{ParseInlines(link.Inlines, true)}]({link.NavigateUri})";
+                        if(link.NavigateUri!=null)text += $"[{ParseInlines(link.Inlines, true)}]({LinkConverter.ConvertToReleative(link.NavigateUri.ToString())})";
                         break;
 
                     case "InlineUIContainer":
                         InlineUIContainer inlineUIContainer = ((InlineUIContainer)inline);
                         Image image = (Image)inlineUIContainer.Child;
                         string url = "";
-                        if (image.Source != null) url = image.Source.ToString();
+                        if (image.Source != null)
+                        {
+                            url = LinkConverter.ConvertToReleative(image.Source.ToString());
+                        }
                         text += $"![]({url})";
                         break;
 

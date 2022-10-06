@@ -12,7 +12,6 @@
             <RowDefinition />
             <RowDefinition />
             <RowDefinition />
-            <RowDefinition />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
@@ -21,10 +20,16 @@
         <Label Content="Ссылка" Grid.ColumnSpan="2" />
         <TextBox x:Name="LinkUrlBox" Grid.Row="1" Grid.ColumnSpan="2"/>
 
-        <Label Content="Текст ссылки" Grid.ColumnSpan="2" Grid.Row="2"/>
-        <TextBox x:Name="LinkTextBox" Grid.Row="3" Grid.ColumnSpan="2"/>
+        <TabControl Grid.Row="2" Grid.ColumnSpan="2">
+            <TabItem Header="Текст">
+                <TextBox x:Name="LinkTextBox" Grid.Row="3" Grid.ColumnSpan="2"/>
+            </TabItem>
+            <TabItem Header="Изображение">
+                <TextBox x:Name="LinkImageTextBox" Grid.Row="3" Grid.ColumnSpan="2"/>
+            </TabItem>
+        </TabControl>
 
-        <Button x:Name="Ok" Content="Ok" Grid.Row="4" Grid.Column="0" Click="Ok_Click"/>
-        <Button x:Name="Cancel" Content="Cancel" Grid.Row="4" Grid.Column="1" Click="Cancel_Click"/>
+        <Button x:Name="Ok" Content="Ok" Grid.Row="3" Grid.Column="0" Click="Ok_Click"/>
+        <Button x:Name="Cancel" Content="Cancel" Grid.Row="3" Grid.Column="1" Click="Cancel_Click"/>
     </Grid>
 </Window>

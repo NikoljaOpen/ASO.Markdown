@@ -6,8 +6,9 @@
         xmlns:local="clr-namespace:ASO.MarkdownTesting"
         xmlns:aso="clr-namespace:ASO.Markdown;assembly=ASO.Markdown"
         xmlns:controls="clr-namespace:ASO.Markdown.Controls;assembly=ASO.Markdown"
+        xmlns:md="clr-namespace:Neo.Markdig.Xaml;assembly=Neo.Markdig.Xaml"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" Loaded="Window_Loaded">
+        Title="MainWindow" Height="450" Width="800">
     <Grid Margin="10">
 
         <Grid.ColumnDefinitions>
@@ -20,7 +21,11 @@
 
         <controls:AsoRichEditor Name="Editor" TextChanged="AsoRichEditor_TextChanged"/>
 
-        <controls:AsoMarkdownViewer x:Name="Viewer" Grid.Column="1"/>
+        <controls:AsoMarkdownViewer x:Name="Viewer" Grid.Column="1">
+            <controls:AsoMarkdownViewer.CommandBindings>
+                <CommandBinding Command="{x:Static md:MarkdownXaml.Hyperlink}" Executed="CommandBinding_Executed" />
+            </controls:AsoMarkdownViewer.CommandBindings>
+        </controls:AsoMarkdownViewer>
 
 
     </Grid>

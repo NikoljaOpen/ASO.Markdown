@@ -35,6 +35,14 @@ namespace ASO.Markdown.DialogWindows
             }
         }
 
+        public string LinkImage
+        {
+            get
+            {
+                return LinkImageTextBox.Text;
+            }
+        }
+
         public AddLinkDialog()
         {
             InitializeComponent();

@@ -8,9 +8,5 @@
              xmlns:md="clr-namespace:Neo.Markdig.Xaml;assembly=Neo.Markdig.Xaml"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <FlowDocumentScrollViewer Name="ScrollViewer">
-        <FlowDocumentScrollViewer.CommandBindings>
-            <CommandBinding Command="{x:Static md:MarkdownXaml.Hyperlink}" Executed="CommandBinding_Executed" />
-        </FlowDocumentScrollViewer.CommandBindings>
-    </FlowDocumentScrollViewer>
+    <FlowDocumentScrollViewer Name="ScrollViewer"/>
 </UserControl>

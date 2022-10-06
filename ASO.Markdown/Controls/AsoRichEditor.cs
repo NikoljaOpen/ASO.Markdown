@@ -1,7 +1,9 @@
 ﻿using ASO.Markdown.DialogWindows;
+using ASO.Markdown.MarkdownServise;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +14,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Media.Media3D;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
@@ -41,35 +44,25 @@ namespace ASO.Markdown.Controls
             Process.Start(new ProcessStartInfo("cmd", $"/c start {e.Uri}") { CreateNoWindow = true });
         }
 
-        private void AsoRichEditor_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (CurrentBlocsCount < Document.Blocks.Count)
-            {
-                ClearParagraphStyle();
-            }
-            CurrentBlocsCount = Document.Blocks.Count;
-        }
-
-        void ClearParagraphStyle()
-        {
-            Paragraph paragraph = CaretPosition.Paragraph;
-            paragraph.FontSize = 12;
-            paragraph.FontWeight = FontWeights.Normal;
-            paragraph.FontFamily = DefaultFont;
-            paragraph.Background = null;
-            paragraph.TextDecorations = null;
-        }
-
         void MyPasteCommand(object sender, DataObjectPastingEventArgs e)
         {
-            Paragraph paragraph = CaretPosition.Paragraph;
+
             if (Clipboard.ContainsText() == true)
             {
-                string t = e.DataObject.GetData(DataFormats.Text) as string;
-                Run run = new Run(t);
-                paragraph.Inlines.Add(run);
+                string clipboardText = (string)e.DataObject.GetData(DataFormats.Text);
+                if (Selection.IsEmpty)
+                {
+                    
+                    Run run = new Run(clipboardText, CaretPosition.GetInsertionPosition(LogicalDirection.Forward));
+                }
+                else
+                {
+                    Selection.Text = clipboardText;
+                }
+                e.CancelCommand();
             }
-            e.CancelCommand();
+            
+            
         }
 
         #region MenuItems
@@ -497,6 +490,25 @@ namespace ASO.Markdown.Controls
 
         #region MenuItemMethods
 
+        private void AsoRichEditor_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (CurrentBlocsCount < Document.Blocks.Count)
+            {
+                ClearParagraphStyle();
+            }
+            CurrentBlocsCount = Document.Blocks.Count;
+        }
+
+        void ClearParagraphStyle()
+        {
+            Paragraph paragraph = CaretPosition.Paragraph;
+            paragraph.FontSize = 12;
+            paragraph.FontWeight = FontWeights.Normal;
+            paragraph.FontFamily = DefaultFont;
+            paragraph.Background = null;
+            paragraph.TextDecorations = null;
+        }
+
         public void addImageItem_Click(object sender, RoutedEventArgs e)
         {
             Paragraph paragraph = CaretPosition.Paragraph;
@@ -504,12 +516,22 @@ namespace ASO.Markdown.Controls
             InputTextDialog inputTextDialog = new InputTextDialog("Введите ссылку на изображение", "добавить", "отменить");
             if (inputTextDialog.ShowDialog() == true)
             {
-                InlineUIContainer container = new InlineUIContainer();
+                
                 Image image = new Image();
-                image.Source = new BitmapImage(new Uri(inputTextDialog.Text));
-                container.Child = image;
-                Paragraph newParagraph = new Paragraph(container);
-                Document.Blocks.InsertAfter(paragraph, newParagraph);
+                BitmapSource bitmapSource = new BitmapImage(new Uri(LinkConverter.ConvertToAbsolute(inputTextDialog.Text)));
+                image.Source = bitmapSource;
+                
+                Binding heightBinding = new Binding();
+                heightBinding.Path = new PropertyPath("Source.(BitmapSource.PixelHeight)");
+                heightBinding.RelativeSource = RelativeSource.Self;
+                image.SetBinding(HeightProperty, heightBinding);
+
+                Binding widthBinding = new Binding();
+                widthBinding.Path = new PropertyPath("Source.(BitmapSource.PixelWidth)");
+                widthBinding.RelativeSource = RelativeSource.Self;
+                image.SetBinding(WidthProperty, widthBinding);
+                
+                new InlineUIContainer(image,CaretPosition.GetInsertionPosition(LogicalDirection.Forward));
             }
         }
 
@@ -520,9 +542,30 @@ namespace ASO.Markdown.Controls
             {
                 Hyperlink hyperlink = new Hyperlink(CaretPosition.GetInsertionPosition(LogicalDirection.Forward), CaretPosition.GetInsertionPosition(LogicalDirection.Forward))
                 {
-                    NavigateUri = new Uri(linkDialog.LinkUrl),
+                    NavigateUri = new Uri(LinkConverter.ConvertToAbsolute(linkDialog.LinkUrl)),
                 };
-                hyperlink.Inlines.Add(new Run(linkDialog.LinkText));
+                if(linkDialog.LinkImage == null || linkDialog.LinkImage == "") hyperlink.Inlines.Add(new Run(linkDialog.LinkText));
+                else
+                {
+                    InlineUIContainer container = new InlineUIContainer();
+                    Image image = new Image();
+                    BitmapSource bitmapSource = new BitmapImage(new Uri(LinkConverter.ConvertToAbsolute(linkDialog.LinkImage)));
+                    image.Source = bitmapSource;
+
+                    Binding heightBinding = new Binding();
+                    heightBinding.Path = new PropertyPath("Source.(BitmapSource.PixelHeight)");
+                    heightBinding.RelativeSource = RelativeSource.Self;
+                    image.SetBinding(HeightProperty, heightBinding);
+
+                    Binding widthBinding = new Binding();
+                    widthBinding.Path = new PropertyPath("Source.(BitmapSource.PixelWidth)");
+                    widthBinding.RelativeSource = RelativeSource.Self;
+                    image.SetBinding(WidthProperty, widthBinding);
+
+                    container.Child = image;
+
+                    hyperlink.Inlines.Add(container);
+                }
                 hyperlink.RequestNavigate += RequestNavigated;
             }
         }
@@ -542,6 +585,7 @@ namespace ASO.Markdown.Controls
                 for (int i = 0; i < b; i++)
                 {
                     TableRow row = new TableRow();
+                    row.Tag = i;
                     rowGroup.Rows.Add(row);
                     for (int j = 0; j < a; j++)
                     {
@@ -549,12 +593,256 @@ namespace ASO.Markdown.Controls
                         cell.BorderThickness = new Thickness(1, 1, 0, 0);
                         cell.BorderBrush = Brushes.Black;
                         cell.Blocks.Add(new Paragraph());
+
+                        ContextMenu contextMenu = new ContextMenu();
+
+                        AddItemsToContextMenu(contextMenu, row, table, j);
+
+                        cell.ContextMenu = contextMenu;
+
                         row.Cells.Add(cell);
                     }
                 }
                 table.RowGroups.Add(rowGroup);
                 Document.Blocks.InsertAfter(CaretPosition.Paragraph, table);
             }
+        }
+
+        private void AddRowDownMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            Table table = (Table)((MenuItem)sender).CommandParameter;
+            TableRow row = (TableRow)((MenuItem)sender).Tag;
+            int index = (int)row.Tag;
+            TableRow newRow = new TableRow();
+
+            for (int j = 0; j < row.Cells.Count; j++)
+            {
+                TableCell cell = new TableCell();
+                cell.BorderThickness = new Thickness(1, 1, 0, 0);
+                cell.BorderBrush = Brushes.Black;
+                cell.TextAlignment = row.Cells[j].TextAlignment;
+                cell.Blocks.Add(new Paragraph());
+
+                ContextMenu contextMenu = new ContextMenu();
+
+                AddItemsToContextMenu(contextMenu, newRow, table, j);
+
+                cell.ContextMenu = contextMenu;
+
+                newRow.Cells.Add(cell);
+            }
+            table.RowGroups[0].Rows.Insert(index+1, newRow);
+
+            for (int i = 0; i < table.RowGroups[0].Rows.Count; i++)
+            {
+                table.RowGroups[0].Rows[i].Tag = i;
+            }
+        }
+
+        private void AddRowUpMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            Table table = (Table)((MenuItem)sender).CommandParameter;
+            TableRow row = (TableRow)((MenuItem)sender).Tag;
+            int index = (int)row.Tag;
+            TableRow newRow = new TableRow();
+
+            for (int j = 0; j < row.Cells.Count; j++)
+            {
+                TableCell cell = new TableCell();
+                cell.BorderThickness = new Thickness(1, 1, 0, 0);
+                cell.BorderBrush = Brushes.Black;
+                cell.TextAlignment = row.Cells[j].TextAlignment;
+                cell.Blocks.Add(new Paragraph());
+
+                ContextMenu contextMenu = new ContextMenu();
+
+                AddItemsToContextMenu(contextMenu,newRow,table, j);
+
+                cell.ContextMenu = contextMenu;
+
+                newRow.Cells.Add(cell);
+
+                
+            }
+            table.RowGroups[0].Rows.Insert(index, newRow);
+
+            for (int i = 0; i < table.RowGroups[0].Rows.Count; i++)
+            {
+                table.RowGroups[0].Rows[i].Tag = i;
+            }
+        }
+
+        private void DeleteRowMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            Table table = (Table)((MenuItem)sender).CommandParameter;
+            TableRow row = (TableRow)((MenuItem)sender).Tag;
+            table.RowGroups[0].Rows.Remove(row);
+            for(int i = 0; i < table.RowGroups[0].Rows.Count; i++)
+            {
+                table.RowGroups[0].Rows[i].Tag = i;
+            }
+        }
+
+        private void DeleteColumnMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            Table table = (Table)((MenuItem)sender).CommandParameter;
+            int column = (int)((MenuItem)sender).Tag;
+            foreach (TableRow row in table.RowGroups[0].Rows)
+            {
+                row.Cells.RemoveAt(column);
+                for (int i = 0; i < row.Cells.Count; i++)
+                {
+                    foreach (MenuItem item in row.Cells[i].ContextMenu.Items)
+                    {
+                        if(item.Tag is int)item.Tag = i;
+                    }
+                }
+            }
+        }
+
+        private void AddItemsToContextMenu(ContextMenu contextMenu, TableRow row, Table table, int columnIndex = 0)
+        {
+            MenuItem centerMenuItem = new MenuItem();
+            centerMenuItem.CommandParameter = table;
+            centerMenuItem.Header = "По центу";
+            centerMenuItem.Tag = columnIndex;
+            centerMenuItem.Click += CenterMenuItem_Click;
+            contextMenu.Items.Add(centerMenuItem);
+
+            MenuItem leftMenuItem = new MenuItem();
+            leftMenuItem.CommandParameter = table;
+            leftMenuItem.Header = "По левой стороне";
+            leftMenuItem.Tag = columnIndex;
+            leftMenuItem.Click += LeftMenuItem_Click;
+            contextMenu.Items.Add(leftMenuItem);
+
+            MenuItem rightMenuItem = new MenuItem();
+            rightMenuItem.CommandParameter = table;
+            rightMenuItem.Header = "По правой стороне";
+            rightMenuItem.Tag = columnIndex;
+            rightMenuItem.Click += RightMenuItem_Click;
+            contextMenu.Items.Add(rightMenuItem);
+
+            MenuItem addColumnLeftMenuItem = new MenuItem();
+            addColumnLeftMenuItem.CommandParameter = table;
+            addColumnLeftMenuItem.Header = "Добавить колонку слева";
+            addColumnLeftMenuItem.Tag = columnIndex;
+            addColumnLeftMenuItem.Click += AddColumnLeftMenuItem_Click;
+            contextMenu.Items.Add(addColumnLeftMenuItem);
+
+            MenuItem addColumnRightMenuItem = new MenuItem();
+            addColumnRightMenuItem.CommandParameter = table;
+            addColumnRightMenuItem.Header = "Добавить колонку справа";
+            addColumnRightMenuItem.Tag = columnIndex;
+            addColumnRightMenuItem.Click += AddColumnRightMenuItem_Click;
+            contextMenu.Items.Add(addColumnRightMenuItem);
+
+            MenuItem deleteColumnMenuItem = new MenuItem();
+            deleteColumnMenuItem.CommandParameter = table;
+            deleteColumnMenuItem.Header = "Удалить колонку";
+            deleteColumnMenuItem.Tag = columnIndex;
+            deleteColumnMenuItem.Click += DeleteColumnMenuItem_Click; ;
+            contextMenu.Items.Add(deleteColumnMenuItem);
+
+            MenuItem deleteRowMenuItem = new MenuItem();
+            deleteRowMenuItem.CommandParameter = table;
+            deleteRowMenuItem.Header = "Удалить строку";
+            deleteRowMenuItem.Tag = row;
+            deleteRowMenuItem.Click += DeleteRowMenuItem_Click;
+            contextMenu.Items.Add(deleteRowMenuItem);
+
+            MenuItem addRowUpMenuItem = new MenuItem();
+            addRowUpMenuItem.CommandParameter = table;
+            addRowUpMenuItem.Tag = row;
+            addRowUpMenuItem.Header = "Добавить строку сверху";
+            addRowUpMenuItem.Click += AddRowUpMenuItem_Click;
+            contextMenu.Items.Add(addRowUpMenuItem);
+
+            MenuItem addRowDownMenuItem = new MenuItem();
+            addRowDownMenuItem.CommandParameter = table;
+            addRowDownMenuItem.Tag = row;
+            addRowDownMenuItem.Header = "Добавить строку снизу";
+            addRowDownMenuItem.Click += AddRowDownMenuItem_Click;
+            contextMenu.Items.Add(addRowDownMenuItem);
+        }
+
+        private void AddColumnLeftMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            Table table = (Table)((MenuItem)sender).CommandParameter;
+            int column = (int)((MenuItem)sender).Tag;
+            foreach (TableRow row in table.RowGroups[0].Rows)
+            {
+                TableCell cell = new TableCell();
+                cell.BorderThickness = new Thickness(1, 1, 0, 0);
+                cell.BorderBrush = Brushes.Black;
+                cell.Blocks.Add(new Paragraph());
+
+                ContextMenu contextMenu = new ContextMenu();
+
+                AddItemsToContextMenu(contextMenu,row,table);
+
+                cell.ContextMenu = contextMenu;
+                row.Cells.Insert(column, cell);
+                for(int i =0; i < row.Cells.Count; i++)
+                {
+                    foreach(MenuItem item in row.Cells[i].ContextMenu.Items)
+                    {
+                        if (item.Tag is int) item.Tag = i;
+                    }
+                }
+            }
+        }
+
+        private void AddColumnRightMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            Table table = (Table)((MenuItem)sender).CommandParameter;
+            int column = (int)((MenuItem)sender).Tag;
+            foreach (TableRow row in table.RowGroups[0].Rows)
+            {
+                TableCell cell = new TableCell();
+                cell.BorderThickness = new Thickness(1, 1, 0, 0);
+                cell.BorderBrush = Brushes.Black;
+                cell.Blocks.Add(new Paragraph());
+
+                ContextMenu contextMenu = new ContextMenu();
+
+                AddItemsToContextMenu(contextMenu, row, table);
+
+                cell.ContextMenu = contextMenu;
+                row.Cells.Insert(column+1, cell);
+                for (int i = 0; i < row.Cells.Count; i++)
+                {
+                    foreach (MenuItem item in row.Cells[i].ContextMenu.Items)
+                    {
+                        if (item.Tag is int) item.Tag = i;
+                    }
+                }
+            }
+        }
+
+        private void setColumnAlligment(object sender, TextAlignment alignment)
+        {
+            Table table = (Table)((MenuItem)sender).CommandParameter;
+            int column = (int)((MenuItem)sender).Tag;
+            foreach (TableRow row in table.RowGroups[0].Rows)
+            {
+                row.Cells[column].TextAlignment = alignment;
+            }
+        }
+
+        private void CenterMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            setColumnAlligment(sender, TextAlignment.Center);
+        }
+
+        private void LeftMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            setColumnAlligment(sender, TextAlignment.Left);
+        }
+
+        private void RightMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            setColumnAlligment(sender, TextAlignment.Right);
         }
 
         public void strikethroughItem_Click(object sender, RoutedEventArgs e)
@@ -652,7 +940,15 @@ namespace ASO.Markdown.Controls
         {
             List list = new List(new ListItem(new Paragraph()));
             list.MarkerStyle = TextMarkerStyle.Decimal;
-            Document.Blocks.InsertAfter(CaretPosition.Paragraph, list);
+            if (CaretPosition.Paragraph.Parent is ListItem)
+            {
+                ListItem item = (ListItem)CaretPosition.Paragraph.Parent;
+                item.Blocks.Add(list);
+            }
+            else
+            {
+                Document.Blocks.InsertAfter(CaretPosition.Paragraph, list);
+            }
             CaretPosition = list.ContentEnd;
         }
 
@@ -660,7 +956,16 @@ namespace ASO.Markdown.Controls
         {
             List list = new List(new ListItem(new Paragraph()));
             list.MarkerStyle = TextMarkerStyle.Disc;
-            Document.Blocks.InsertAfter(CaretPosition.Paragraph, list);
+            if(CaretPosition.Paragraph.Parent is ListItem)
+            {
+                ListItem item = (ListItem)CaretPosition.Paragraph.Parent;
+                item.Blocks.Add(list);
+            }
+            else
+            {
+                Document.Blocks.InsertAfter(CaretPosition.Paragraph, list);
+            }
+            
             CaretPosition = list.ContentEnd;
         }
 
