@@ -53,10 +53,14 @@ public partial class NovaMarkdownViewer : UserControl
 
     private void CommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
     {
-        var par = (e.Parameter as Uri)?.AbsoluteUri ?? string.Empty;
+        var uri = e.Parameter as Uri;
 
-        if (par != string.Empty)
-            Process.Start("cmd", $"/c start {par}");
+        if (uri != null && uri.OriginalString != "#")
+        {
+            var uriFileInfo= new UriFileInfo(uri.AbsoluteUri);
+
+            //Process.Start("cmd", $"/c start {uri.AbsoluteUri}");
+        }
     }
 
     public void RefreshDocument()
