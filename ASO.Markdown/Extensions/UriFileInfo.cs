@@ -22,6 +22,8 @@ public class UriFileInfo
 
     public string Query = string.Empty;
 
+    public long? ContentLength;
+
     public UriOfType OfType = UriOfType.None;
 
     public UriExtension Extension = UriExtension.None;
@@ -40,10 +42,12 @@ public class UriFileInfo
             var requestUri = request.RequestMessage?.RequestUri ?? null;
             if (requestUri != null)
             {
+                Scheme = requestUri.Scheme;
                 Host = requestUri.Host ?? string.Empty;
                 AbsolutePath = requestUri.AbsolutePath;
                 Query = requestUri.Query;
-                Scheme = requestUri.Scheme;
+
+                ContentLength = request.Content.Headers.ContentLength;
             }
 
             var contentType = request.Content.Headers.ContentType?.MediaType?.Split('/') ?? null;

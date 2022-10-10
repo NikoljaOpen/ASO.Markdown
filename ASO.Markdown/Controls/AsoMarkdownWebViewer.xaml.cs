@@ -33,9 +33,7 @@ public partial class AsoMarkdownWebViewer : UserControl
         set
         {
             _Markdown = value;
-
-            var html = Markdig.Markdown.ToHtml(_Markdown, _Pipeline);
-            Viewer.NavigateToString(html);
+            DocumentUpdate();
         }
     }
 
@@ -45,6 +43,13 @@ public partial class AsoMarkdownWebViewer : UserControl
         InitializeComponent();
 
         Viewer.EnsureCoreWebView2Async();
+    }
+
+    private async void DocumentUpdate()
+    {
+        await Viewer.EnsureCoreWebView2Async();
+        var html = Markdig.Markdown.ToHtml(_Markdown ?? string.Empty, _Pipeline);
+        Viewer.NavigateToString(html);
     }
 }
 
