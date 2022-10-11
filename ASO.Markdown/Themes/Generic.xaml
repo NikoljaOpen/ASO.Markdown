@@ -148,9 +148,6 @@
                             <TabItem Header="NovaMarkdownViewer">
                                 <controls:NovaMarkdownViewer x:Name="NovaViewer"/>
                             </TabItem>
-                            <TabItem Header="AsoMarkdownViewer">
-                                <controls:AsoMarkdownViewer BorderThickness="1" BorderBrush="Silver" x:Name="Viewer"/>
-                            </TabItem>
                             <TabItem Header="AsoMarkdownWebViewer">
                                 <controls:AsoMarkdownWebViewer BorderThickness="1" BorderBrush="Silver" x:Name="WebViewer"/>
                             </TabItem>

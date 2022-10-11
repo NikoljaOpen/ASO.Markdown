@@ -12,7 +12,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <controls:AsoMarkdownViewer Name="QuestionTextView"/>
+        <controls:NovaMarkdownViewer Name="QuestionTextView"/>
         <ListView x:Name="AnswerList" Grid.Row="1">
             <ListView.ItemTemplate>
                 <DataTemplate>

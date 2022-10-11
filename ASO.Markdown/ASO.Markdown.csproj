@@ -31,8 +31,4 @@
     <Resource Include="MarkdownInfoFiles\question.png" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Markdig.Wpf" Version="0.5.0.1" />
-  </ItemGroup>
-
 </Project>
