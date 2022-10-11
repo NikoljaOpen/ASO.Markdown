@@ -8,6 +8,6 @@
         mc:Ignorable="d"
         Title="Пособие по Markdown" Height="450" Width="800" Loaded="Window_Loaded" Icon="/ASO.Markdown;component/MarkdownInfoFiles/keyboard.png">
     <Grid>
-        <controls:NovaMarkdownViewer x:Name="Viewer"/>
+        <controls:AsoMarkdownViewer x:Name="Viewer"/>
     </Grid>
 </Window>

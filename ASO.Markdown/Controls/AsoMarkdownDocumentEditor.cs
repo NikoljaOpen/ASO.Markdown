@@ -52,7 +52,7 @@ namespace ASO.Markdown.Controls
             }
         }
 
-        private NovaMarkdownViewer? _novaMarkdownViewer;
+        private AsoMarkdownViewer? _novaMarkdownViewer;
         private AsoMarkdownWebViewer? _webMarkdownViewer;
         private void asoMarkdownEditor_TextChanged(object sender, EventArgs e)
         {
@@ -63,7 +63,7 @@ namespace ASO.Markdown.Controls
         public override void OnApplyTemplate()
         {
             AsoMarkdownEditor = GetTemplateChild("Editor") as AsoMarkdownEditor;
-            _novaMarkdownViewer = GetTemplateChild("NovaViewer") as NovaMarkdownViewer;
+            _novaMarkdownViewer = GetTemplateChild("AsoViewer") as AsoMarkdownViewer;
             _webMarkdownViewer = GetTemplateChild("WebViewer") as AsoMarkdownWebViewer;
         }
 

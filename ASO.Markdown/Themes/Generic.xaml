@@ -145,8 +145,8 @@
                         <controls:AsoMarkdownEditor BorderThickness="1" BorderBrush="Silver" MenuBorderThickness="0 0 0 1" x:Name="Editor"/>
                         <GridSplitter Background="Transparent" Width="5" Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Center"/>
                         <TabControl Grid.Column="2">
-                            <TabItem Header="NovaMarkdownViewer">
-                                <controls:NovaMarkdownViewer x:Name="NovaViewer"/>
+                            <TabItem Header="AsoMarkdownViewer">
+                                <controls:AsoMarkdownViewer x:Name="AsoViewer"/>
                             </TabItem>
                             <TabItem Header="AsoMarkdownWebViewer">
                                 <controls:AsoMarkdownWebViewer BorderThickness="1" BorderBrush="Silver" x:Name="WebViewer"/>

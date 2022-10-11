@@ -3,7 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ASO.MarkdownTesting" xmlns:controls="clr-namespace:ASO.Markdown.Controls;assembly=ASO.Markdown"
+        xmlns:local="clr-namespace:ASO.MarkdownTesting" 
+        xmlns:controls="clr-namespace:ASO.Markdown.Controls;assembly=ASO.Markdown"
         mc:Ignorable="d"
         Title="QuestionWindow" Height="450" Width="800" Loaded="Window_Loaded">
     <Grid>
@@ -12,7 +13,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <controls:NovaMarkdownViewer Name="QuestionTextView"/>
+        <controls:AsoMarkdownViewer Name="QuestionTextView"/>
         <ListView x:Name="AnswerList" Grid.Row="1">
             <ListView.ItemTemplate>
                 <DataTemplate>

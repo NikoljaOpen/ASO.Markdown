@@ -20,7 +20,7 @@ using System.Xaml;
 
 namespace ASO.Markdown.Controls;
 
-public partial class NovaMarkdownViewer : UserControl
+public partial class AsoMarkdownViewer : UserControl
 {
     private string _markdown = string.Empty;
 
@@ -46,7 +46,7 @@ public partial class NovaMarkdownViewer : UserControl
     }
 
 
-    public NovaMarkdownViewer()
+    public AsoMarkdownViewer()
     {
         InitializeComponent();
     }
