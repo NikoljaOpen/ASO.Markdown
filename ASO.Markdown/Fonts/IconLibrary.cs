@@ -25,7 +25,10 @@ public enum IconType
     Question,
     Undo,
     Redo,
-    BulletedLis
+    BulletedLis,
+    AlignCenter,
+    AlignRight,
+    AlignLeft
 }
 
 public static class IconLibrary
@@ -53,7 +56,10 @@ public static class IconLibrary
         [IconType.Question]     = "\ue959",
         [IconType.Undo]         = "\ue94d",
         [IconType.Redo]         = "\ue938",
-        [IconType.BulletedLis]  = "\ue967"
+        [IconType.BulletedLis]  = "\ue967",
+        [IconType.AlignCenter]  = "\ue948",
+        [IconType.AlignLeft]    = "\ue947",
+        [IconType.AlignRight]   = "\ue946"
     };
 }
 
