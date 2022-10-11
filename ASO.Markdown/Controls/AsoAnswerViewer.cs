@@ -1,64 +1,51 @@
 ﻿using ASO.Markdown.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
-namespace ASO.Markdown.Controls
+namespace ASO.Markdown.Controls;
+public class AsoAnswerViewer : Control
 {
-    public class AsoAnswerViewer : Control
+    public Answer answer { get; set; } = new Answer();
+    
+    private Button _deleteButton;
+    private Button DeleteButton
     {
-        public Answer answer { get; set; } = new Answer();
-        private Button deleteButton;
-
-        private Button DeleteButton
+        get
         {
-            get
+            return _deleteButton;
+        }
+
+        set
+        {
+            if (_deleteButton != null)
             {
-                return deleteButton;
+                _deleteButton.Click -=
+                    new RoutedEventHandler(Click);
             }
+            _deleteButton = value;
 
-            set
+            if (_deleteButton != null)
             {
-                if (deleteButton != null)
-                {
-                    deleteButton.Click -=
-                        new RoutedEventHandler(Click);
-                }
-                deleteButton = value;
-
-                if (deleteButton != null)
-                {
-                    deleteButton.Click +=
-                        new RoutedEventHandler(Click);
-                }
+                _deleteButton.Click +=
+                    new RoutedEventHandler(Click);
             }
         }
+    }
 
-        private void Click(object sender, EventArgs e)
-        {
-            ((StackPanel)Parent).Children.Remove(this);
-            
-        }
 
-        public override void OnApplyTemplate()
-        {
-            DeleteButton = GetTemplateChild("DeleteButton") as Button;
-        }
+    static AsoAnswerViewer()
+    {
+        DefaultStyleKeyProperty.OverrideMetadata(typeof(AsoAnswerViewer), new FrameworkPropertyMetadata(typeof(AsoAnswerViewer)));
+    }
 
-        static AsoAnswerViewer()
-        {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(AsoAnswerViewer), new FrameworkPropertyMetadata(typeof(AsoAnswerViewer)));
-        }
+    private void Click(object sender, EventArgs e)
+    {
+        ((StackPanel)Parent).Children.Remove(this);
+    }
+
+    public override void OnApplyTemplate()
+    {
+        DeleteButton = GetTemplateChild("DeleteButton") as Button ?? throw new Exception($"Ошибка {OnApplyTemplate}");
     }
 }

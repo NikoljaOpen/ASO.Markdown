@@ -1,75 +1,65 @@
-﻿using Microsoft.Web.WebView2.Wpf;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
-namespace ASO.Markdown.Controls
+namespace ASO.Markdown.Controls;
+public class AsoMarkdownDocumentEditor : Control
 {
-    public class AsoMarkdownDocumentEditor : Control
+    public string Markdown
     {
-        public string Markdown
+        get
         {
-            get
+            return _asoMarkdownEditor.Text;
+        }
+    }
+
+    private AsoMarkdownEditor _asoMarkdownEditor;
+    private AsoMarkdownEditor AsoMarkdownEditor
+    {
+        get
+        {
+            return _asoMarkdownEditor;
+        }
+
+        set
+        {
+            if (_asoMarkdownEditor != null)
             {
-                return asoMarkdownEditor.Text;
+                _asoMarkdownEditor.TextChanged -=
+                    new EventHandler(AsoMarkdownEditor_TextChanged);
+            }
+            _asoMarkdownEditor = value;
+
+            if (_asoMarkdownEditor != null)
+            {
+                _asoMarkdownEditor.TextChanged +=
+                    new EventHandler(AsoMarkdownEditor_TextChanged);
             }
         }
+    }
 
-        private AsoMarkdownEditor asoMarkdownEditor;
+    private AsoMarkdownViewer? _novaMarkdownViewer;
+    
+    private AsoMarkdownWebViewer? _webMarkdownViewer;
 
-        private AsoMarkdownEditor AsoMarkdownEditor
-        {
-            get
-            {
-                return asoMarkdownEditor;
-            }
 
-            set
-            {
-                if (asoMarkdownEditor != null)
-                {
-                    asoMarkdownEditor.TextChanged -=
-                        new EventHandler(asoMarkdownEditor_TextChanged);
-                }
-                asoMarkdownEditor = value;
+    static AsoMarkdownDocumentEditor()
+    {
+        DefaultStyleKeyProperty.OverrideMetadata(typeof(AsoMarkdownDocumentEditor), new FrameworkPropertyMetadata(typeof(AsoMarkdownDocumentEditor)));
+    }
 
-                if (asoMarkdownEditor != null)
-                {
-                    asoMarkdownEditor.TextChanged +=
-                        new EventHandler(asoMarkdownEditor_TextChanged);
-                }
-            }
-        }
+    private void AsoMarkdownEditor_TextChanged(object sender, EventArgs e)
+    {
+        if (_novaMarkdownViewer != null) _novaMarkdownViewer.Markdown = AsoMarkdownEditor.Text;
+        if (_webMarkdownViewer != null) _webMarkdownViewer.Markdown = AsoMarkdownEditor.Text;
+    }
 
-        private AsoMarkdownViewer? _novaMarkdownViewer;
-        private AsoMarkdownWebViewer? _webMarkdownViewer;
-        private void asoMarkdownEditor_TextChanged(object sender, EventArgs e)
-        {
-            if (_novaMarkdownViewer != null) _novaMarkdownViewer.Markdown = AsoMarkdownEditor.Text;
-            if (_webMarkdownViewer != null) _webMarkdownViewer.Markdown = AsoMarkdownEditor.Text;
-        }
+    public override void OnApplyTemplate()
+    {
+        var exeption = new Exception($"Ошибка {OnApplyTemplate}");
 
-        public override void OnApplyTemplate()
-        {
-            AsoMarkdownEditor = GetTemplateChild("Editor") as AsoMarkdownEditor;
-            _novaMarkdownViewer = GetTemplateChild("AsoViewer") as AsoMarkdownViewer;
-            _webMarkdownViewer = GetTemplateChild("WebViewer") as AsoMarkdownWebViewer;
-        }
-
-        static AsoMarkdownDocumentEditor()
-        {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(AsoMarkdownDocumentEditor), new FrameworkPropertyMetadata(typeof(AsoMarkdownDocumentEditor)));
-        }
+        AsoMarkdownEditor = GetTemplateChild("Editor") as AsoMarkdownEditor ?? throw exeption;
+        _novaMarkdownViewer = GetTemplateChild("AsoViewer") as AsoMarkdownViewer ?? throw exeption;
+        _webMarkdownViewer = GetTemplateChild("WebViewer") as AsoMarkdownWebViewer ?? throw exeption;
     }
 }

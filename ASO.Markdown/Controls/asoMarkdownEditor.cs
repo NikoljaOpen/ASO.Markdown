@@ -1,659 +1,632 @@
 ﻿using ASO.Markdown.DialogWindows;
 using ICSharpCode.AvalonEdit;
-using ICSharpCode.AvalonEdit.Editing;
 using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Forms.VisualStyles;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
-namespace ASO.Markdown.Controls
+namespace ASO.Markdown.Controls;
+
+public class AsoMarkdownEditor : TextEditor
 {
-    public class AsoMarkdownEditor : TextEditor
+    public Brush MenuBackground { get; set; }
+    
+    public Thickness MenuBorderThickness { get; set; }
+
+    private MenuItem _openFileItem;
+    private MenuItem OpenFileItem
     {
-        static AsoMarkdownEditor()
+        get
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(AsoMarkdownEditor), new FrameworkPropertyMetadata(typeof(AsoMarkdownEditor)));
+            return _openFileItem;
         }
 
-        public AsoMarkdownEditor()
+        set
         {
-            BrushConverter bc = new BrushConverter();
-            MenuBackground = (Brush)bc.ConvertFrom("#F8F9FA");
-        }
-
-        public Brush MenuBackground { get; set; }
-        public Thickness MenuBorderThickness { get; set; }
-
-        private MenuItem openFileItem;
-
-        private MenuItem OpenFileItem
-        {
-            get
+            if (_openFileItem != null)
             {
-                return openFileItem;
+                _openFileItem.Click -=
+                    new RoutedEventHandler(openFileItem_Click);
             }
+            _openFileItem = value;
 
-            set
+            if (_openFileItem != null)
             {
-                if (openFileItem != null)
-                {
-                    openFileItem.Click -=
-                        new RoutedEventHandler(openFileItem_Click);
-                }
-                openFileItem = value;
-
-                if (openFileItem != null)
-                {
-                    openFileItem.Click +=
-                        new RoutedEventHandler(openFileItem_Click);
-                }
+                _openFileItem.Click +=
+                    new RoutedEventHandler(openFileItem_Click);
             }
         }
+    }
 
-        private MenuItem addImageItem;
-
-        private MenuItem AddImageItem
+    private MenuItem _addImageItem;
+    private MenuItem AddImageItem
+    {
+        get
         {
-            get
-            {
-                return addImageItem;
-            }
-
-            set
-            {
-                if (addImageItem != null)
-                {
-                    addImageItem.Click -=
-                        new RoutedEventHandler(addImageItem_Click);
-                }
-                addImageItem = value;
-
-                if (addImageItem != null)
-                {
-                    addImageItem.Click +=
-                        new RoutedEventHandler(addImageItem_Click);
-                }
-            }
+            return _addImageItem;
         }
 
-        private MenuItem addLinkItem;
-
-        private MenuItem AddLinkItem
+        set
         {
-            get
+            if (_addImageItem != null)
             {
-                return addLinkItem;
+                _addImageItem.Click -=
+                    new RoutedEventHandler(addImageItem_Click);
             }
+            _addImageItem = value;
 
-            set
+            if (_addImageItem != null)
             {
-                if (addLinkItem != null)
-                {
-                    addLinkItem.Click -=
-                        new RoutedEventHandler(addLinkItem_Click);
-                }
-                addLinkItem = value;
-
-                if (addLinkItem != null)
-                {
-                    addLinkItem.Click +=
-                        new RoutedEventHandler(addLinkItem_Click);
-                }
+                _addImageItem.Click +=
+                    new RoutedEventHandler(addImageItem_Click);
             }
         }
+    }
 
-        private MenuItem addTableItem;
-
-        private MenuItem AddTableItem
+    private MenuItem _addLinkItem;
+    private MenuItem AddLinkItem
+    {
+        get
         {
-            get
-            {
-                return addTableItem;
-            }
-
-            set
-            {
-                if (addTableItem != null)
-                {
-                    addTableItem.Click -=
-                        new RoutedEventHandler(addTableItem_Click);
-                }
-                addTableItem = value;
-
-                if (addTableItem != null)
-                {
-                    addTableItem.Click +=
-                        new RoutedEventHandler(addTableItem_Click);
-                }
-            }
+            return _addLinkItem;
         }
 
-        private MenuItem boldItem;
-
-        private MenuItem BoldItem
+        set
         {
-            get
+            if (_addLinkItem != null)
             {
-                return boldItem;
+                _addLinkItem.Click -=
+                    new RoutedEventHandler(addLinkItem_Click);
             }
+            _addLinkItem = value;
 
-            set
+            if (_addLinkItem != null)
             {
-                if (boldItem != null)
-                {
-                    boldItem.Click -=
-                        new RoutedEventHandler(boldItem_Click);
-                }
-                boldItem = value;
-
-                if (boldItem != null)
-                {
-                    boldItem.Click +=
-                        new RoutedEventHandler(boldItem_Click);
-                }
+                _addLinkItem.Click +=
+                    new RoutedEventHandler(addLinkItem_Click);
             }
         }
+    }
 
-        private MenuItem italicItem;
-
-        private MenuItem ItalicItem
+    private MenuItem _addTableItem;
+    private MenuItem AddTableItem
+    {
+        get
         {
-            get
-            {
-                return italicItem;
-            }
-
-            set
-            {
-                if (italicItem != null)
-                {
-                    italicItem.Click -=
-                        new RoutedEventHandler(italicItem_Click);
-                }
-                italicItem = value;
-
-                if (italicItem != null)
-                {
-                    italicItem.Click +=
-                        new RoutedEventHandler(italicItem_Click);
-                }
-            }
+            return _addTableItem;
         }
 
-        private MenuItem strikethroughItem;
-
-        private MenuItem StrikethroughItem
+        set
         {
-            get
+            if (_addTableItem != null)
             {
-                return strikethroughItem;
+                _addTableItem.Click -=
+                    new RoutedEventHandler(addTableItem_Click);
             }
+            _addTableItem = value;
 
-            set
+            if (_addTableItem != null)
             {
-                if (strikethroughItem != null)
-                {
-                    strikethroughItem.Click -=
-                        new RoutedEventHandler(strikethroughItem_Click);
-                }
-                strikethroughItem = value;
-
-                if (strikethroughItem != null)
-                {
-                    strikethroughItem.Click +=
-                        new RoutedEventHandler(strikethroughItem_Click);
-                }
+                _addTableItem.Click +=
+                    new RoutedEventHandler(addTableItem_Click);
             }
         }
+    }
 
-        private MenuItem underlineItem;
-
-        private MenuItem UnderlineItem
+    private MenuItem _boldItem;
+    private MenuItem BoldItem
+    {
+        get
         {
-            get
-            {
-                return underlineItem;
-            }
-
-            set
-            {
-                if (underlineItem != null)
-                {
-                    underlineItem.Click -=
-                        new RoutedEventHandler(underlineItem_Click);
-                }
-                underlineItem = value;
-
-                if (underlineItem != null)
-                {
-                    underlineItem.Click +=
-                        new RoutedEventHandler(underlineItem_Click);
-                }
-            }
+            return _boldItem;
         }
 
-        private MenuItem saveFileItemItem;
-
-        private MenuItem SaveFileItem
+        set
         {
-            get
+            if (_boldItem != null)
             {
-                return saveFileItemItem;
+                _boldItem.Click -=
+                    new RoutedEventHandler(boldItem_Click);
             }
+            _boldItem = value;
 
-            set
+            if (_boldItem != null)
             {
-                if (saveFileItemItem != null)
-                {
-                    saveFileItemItem.Click -=
-                        new RoutedEventHandler(saveFileItemItem_Click);
-                }
-                saveFileItemItem = value;
-
-                if (saveFileItemItem != null)
-                {
-                    saveFileItemItem.Click +=
-                        new RoutedEventHandler(saveFileItemItem_Click);
-                }
+                _boldItem.Click +=
+                    new RoutedEventHandler(boldItem_Click);
             }
         }
+    }
 
-        private MenuItem codeBlockItem;
-
-        private MenuItem CodeBlockItem
+    private MenuItem _italicItem;
+    private MenuItem ItalicItem
+    {
+        get
         {
-            get
-            {
-                return codeBlockItem;
-            }
-
-            set
-            {
-                if (codeBlockItem != null)
-                {
-                    codeBlockItem.Click -=
-                        new RoutedEventHandler(codeBlockItem_Click);
-                }
-                codeBlockItem = value;
-
-                if (codeBlockItem != null)
-                {
-                    codeBlockItem.Click +=
-                        new RoutedEventHandler(codeBlockItem_Click);
-                }
-            }
+            return _italicItem;
         }
 
-        private MenuItem headingItem;
-
-        private MenuItem HeadingItem
+        set
         {
-            get
+            if (_italicItem != null)
             {
-                return headingItem;
+                _italicItem.Click -=
+                    new RoutedEventHandler(italicItem_Click);
             }
+            _italicItem = value;
 
-            set
+            if (_italicItem != null)
             {
-                if (headingItem != null)
-                {
-                    headingItem.Click -=
-                        new RoutedEventHandler(headingItem_Click);
-                }
-                headingItem = value;
-
-                if (headingItem != null)
-                {
-                    headingItem.Click +=
-                        new RoutedEventHandler(headingItem_Click);
-                }
+                _italicItem.Click +=
+                    new RoutedEventHandler(italicItem_Click);
             }
         }
+    }
 
-        private MenuItem bulletedListItem;
-
-        private MenuItem BulletedListItem
+    private MenuItem _strikethroughItem;
+    private MenuItem StrikethroughItem
+    {
+        get
         {
-            get
-            {
-                return bulletedListItem;
-            }
-
-            set
-            {
-                if (bulletedListItem != null)
-                {
-                    bulletedListItem.Click -=
-                        new RoutedEventHandler(bulletedListItem_Click);
-                }
-                bulletedListItem = value;
-
-                if (bulletedListItem != null)
-                {
-                    bulletedListItem.Click +=
-                        new RoutedEventHandler(bulletedListItem_Click);
-                }
-            }
+            return _strikethroughItem;
         }
 
-        private MenuItem numberedListItem;
-
-        private MenuItem NumberedListItem
+        set
         {
-            get
+            if (_strikethroughItem != null)
             {
-                return numberedListItem;
+                _strikethroughItem.Click -=
+                    new RoutedEventHandler(strikethroughItem_Click);
             }
+            _strikethroughItem = value;
 
-            set
+            if (_strikethroughItem != null)
             {
-                if (numberedListItem != null)
-                {
-                    numberedListItem.Click -=
-                        new RoutedEventHandler(numberedListItem_Click);
-                }
-                numberedListItem = value;
-
-                if (numberedListItem != null)
-                {
-                    numberedListItem.Click +=
-                        new RoutedEventHandler(numberedListItem_Click);
-                }
+                _strikethroughItem.Click +=
+                    new RoutedEventHandler(strikethroughItem_Click);
             }
         }
+    }
 
-        private MenuItem redoItem;
-
-        private MenuItem RedoItem
+    private MenuItem _underlineItem;
+    private MenuItem UnderlineItem
+    {
+        get
         {
-            get
-            {
-                return redoItem;
-            }
-
-            set
-            {
-                if (redoItem != null)
-                {
-                    redoItem.Click -=
-                        new RoutedEventHandler(redoItem_Click);
-                }
-                redoItem = value;
-
-                if (redoItem != null)
-                {
-                    redoItem.Click +=
-                        new RoutedEventHandler(redoItem_Click);
-                }
-            }
+            return _underlineItem;
         }
 
-        private MenuItem undoItem;
-
-        private MenuItem UndoItem
+        set
         {
-            get
+            if (_underlineItem != null)
             {
-                return undoItem;
+                _underlineItem.Click -=
+                    new RoutedEventHandler(underlineItem_Click);
             }
+            _underlineItem = value;
 
-            set
+            if (_underlineItem != null)
             {
-                if (undoItem != null)
-                {
-                    undoItem.Click -=
-                        new RoutedEventHandler(undoItem_Click);
-                }
-                undoItem = value;
-
-                if (undoItem != null)
-                {
-                    undoItem.Click +=
-                        new RoutedEventHandler(undoItem_Click);
-                }
+                _underlineItem.Click +=
+                    new RoutedEventHandler(underlineItem_Click);
             }
         }
+    }
 
-        private MenuItem quoteItem;
-
-        private MenuItem QuoteItem
+    private MenuItem _saveFileItemItem;
+    private MenuItem SaveFileItem
+    {
+        get
         {
-            get
-            {
-                return quoteItem;
-            }
-
-            set
-            {
-                if (quoteItem != null)
-                {
-                    quoteItem.Click -=
-                        new RoutedEventHandler(quoteItem_Click);
-                }
-                quoteItem = value;
-
-                if (quoteItem != null)
-                {
-                    quoteItem.Click +=
-                        new RoutedEventHandler(quoteItem_Click);
-                }
-            }
+            return _saveFileItemItem;
         }
 
-        private MenuItem helpItem;
-
-        private MenuItem HelpItem
+        set
         {
-            get
+            if (_saveFileItemItem != null)
             {
-                return helpItem;
+                _saveFileItemItem.Click -=
+                    new RoutedEventHandler(saveFileItemItem_Click);
             }
+            _saveFileItemItem = value;
 
-            set
+            if (_saveFileItemItem != null)
             {
-                if (helpItem != null)
-                {
-                    helpItem.Click -=
-                        new RoutedEventHandler(helpItem_Click);
-                }
-                helpItem = value;
-
-                if (helpItem != null)
-                {
-                    helpItem.Click +=
-                        new RoutedEventHandler(helpItem_Click);
-                }
+                _saveFileItemItem.Click +=
+                    new RoutedEventHandler(saveFileItemItem_Click);
             }
         }
+    }
 
-        public override void OnApplyTemplate()
+    private MenuItem _codeBlockItem;
+    private MenuItem CodeBlockItem
+    {
+        get
         {
-            OpenFileItem = GetTemplateChild("OpenFileItem") as MenuItem;
-            AddImageItem = GetTemplateChild("AddImageItem") as MenuItem;
-            AddLinkItem = GetTemplateChild("AddLinkItem") as MenuItem;
-            AddTableItem = GetTemplateChild("AddTableItem") as MenuItem;
-            BoldItem = GetTemplateChild("BoldItem") as MenuItem;
-            ItalicItem = GetTemplateChild("ItalicItem") as MenuItem;
-            StrikethroughItem = GetTemplateChild("StrikethroughItem") as MenuItem;
-            UnderlineItem = GetTemplateChild("UnderlineItem") as MenuItem;
-            SaveFileItem = GetTemplateChild("SaveFileItem") as MenuItem;
-            CodeBlockItem = GetTemplateChild("CodeBlockItem") as MenuItem;
-            HeadingItem = GetTemplateChild("HeadingItem") as MenuItem;
-            BulletedListItem = GetTemplateChild("BulletedListItem") as MenuItem;
-            NumberedListItem = GetTemplateChild("NumberedListItem") as MenuItem;
-            QuoteItem = GetTemplateChild("QuoteItem") as MenuItem;
-            RedoItem = GetTemplateChild("RedoItem") as MenuItem;
-            UndoItem = GetTemplateChild("UndoItem") as MenuItem;
-            HelpItem = GetTemplateChild("HelpItem") as MenuItem;
+            return _codeBlockItem;
         }
 
-        public void openFileItem_Click(object sender, RoutedEventArgs e)
+        set
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Файлы Markdown  (*.md)|*.md";
-            if (openFileDialog.ShowDialog() == true)
-                Text = File.ReadAllText(openFileDialog.FileName);
-        }
-
-        public void saveFileItemItem_Click(object sender, RoutedEventArgs e)
-        {
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "Файлы Markdown  (*.md)|*.md";
-            if (saveFileDialog.ShowDialog() == true)
+            if (_codeBlockItem != null)
             {
-                string filename = saveFileDialog.FileName;
-                File.WriteAllText(filename, Text);
+                _codeBlockItem.Click -=
+                    new RoutedEventHandler(codeBlockItem_Click);
+            }
+            _codeBlockItem = value;
+
+            if (_codeBlockItem != null)
+            {
+                _codeBlockItem.Click +=
+                    new RoutedEventHandler(codeBlockItem_Click);
             }
         }
+    }
 
-        public void addImageItem_Click(object sender, RoutedEventArgs e)
+    private MenuItem _headingItem;
+    private MenuItem HeadingItem
+    {
+        get
         {
-            InputTextDialog inputTextDialog = new InputTextDialog("Введите ссылку", "добавить", "отменить");
-            if (inputTextDialog.ShowDialog() == true)
-            {
-                SelectedText = $"![]({inputTextDialog.Text})";
-            }
+            return _headingItem;
         }
 
-        public void addLinkItem_Click(object sender, RoutedEventArgs e)
+        set
         {
-            InputTextDialog inputTextDialog = new InputTextDialog("Введите ссылку на изображение", "добавить", "отменить");
-            if (inputTextDialog.ShowDialog() == true)
+            if (_headingItem != null)
             {
-                SelectedText = $"[]({inputTextDialog.Text})";
+                _headingItem.Click -=
+                    new RoutedEventHandler(headingItem_Click);
+            }
+            _headingItem = value;
+
+            if (_headingItem != null)
+            {
+                _headingItem.Click +=
+                    new RoutedEventHandler(headingItem_Click);
             }
         }
+    }
 
-        public void addTableItem_Click(object sender, RoutedEventArgs e)
+    private MenuItem _bulletedListItem;
+    private MenuItem BulletedListItem
+    {
+        get
         {
-            InputTwoNumbersDialog inputTwoNumbersDialog = new InputTwoNumbersDialog("Введите кол-во колонок/строк таблицы", "добавить", "отменить");
-            if (inputTwoNumbersDialog.ShowDialog() == true)
-            {
-                int a = inputTwoNumbersDialog.NumberOne;
-                int b = inputTwoNumbersDialog.NumberTwo;
-                string table = "";
+            return _bulletedListItem;
+        }
 
+        set
+        {
+            if (_bulletedListItem != null)
+            {
+                _bulletedListItem.Click -=
+                    new RoutedEventHandler(bulletedListItem_Click);
+            }
+            _bulletedListItem = value;
+
+            if (_bulletedListItem != null)
+            {
+                _bulletedListItem.Click +=
+                    new RoutedEventHandler(bulletedListItem_Click);
+            }
+        }
+    }
+
+    private MenuItem _numberedListItem;
+    private MenuItem NumberedListItem
+    {
+        get
+        {
+            return _numberedListItem;
+        }
+
+        set
+        {
+            if (_numberedListItem != null)
+            {
+                _numberedListItem.Click -=
+                    new RoutedEventHandler(numberedListItem_Click);
+            }
+            _numberedListItem = value;
+
+            if (_numberedListItem != null)
+            {
+                _numberedListItem.Click +=
+                    new RoutedEventHandler(numberedListItem_Click);
+            }
+        }
+    }
+
+    private MenuItem _redoItem;
+    private MenuItem RedoItem
+    {
+        get
+        {
+            return _redoItem;
+        }
+
+        set
+        {
+            if (_redoItem != null)
+            {
+                _redoItem.Click -=
+                    new RoutedEventHandler(redoItem_Click);
+            }
+            _redoItem = value;
+
+            if (_redoItem != null)
+            {
+                _redoItem.Click +=
+                    new RoutedEventHandler(redoItem_Click);
+            }
+        }
+    }
+
+    private MenuItem _undoItem;
+    private MenuItem UndoItem
+    {
+        get
+        {
+            return _undoItem;
+        }
+
+        set
+        {
+            if (_undoItem != null)
+            {
+                _undoItem.Click -=
+                    new RoutedEventHandler(undoItem_Click);
+            }
+            _undoItem = value;
+
+            if (_undoItem != null)
+            {
+                _undoItem.Click +=
+                    new RoutedEventHandler(undoItem_Click);
+            }
+        }
+    }
+
+    private MenuItem _quoteItem;
+    private MenuItem QuoteItem
+    {
+        get
+        {
+            return _quoteItem;
+        }
+
+        set
+        {
+            if (_quoteItem != null)
+            {
+                _quoteItem.Click -=
+                    new RoutedEventHandler(quoteItem_Click);
+            }
+            _quoteItem = value;
+
+            if (_quoteItem != null)
+            {
+                _quoteItem.Click +=
+                    new RoutedEventHandler(quoteItem_Click);
+            }
+        }
+    }
+
+    private MenuItem _helpItem;
+    private MenuItem HelpItem
+    {
+        get
+        {
+            return _helpItem;
+        }
+
+        set
+        {
+            if (_helpItem != null)
+            {
+                _helpItem.Click -=
+                    new RoutedEventHandler(helpItem_Click);
+            }
+            _helpItem = value;
+
+            if (_helpItem != null)
+            {
+                _helpItem.Click +=
+                    new RoutedEventHandler(helpItem_Click);
+            }
+        }
+    }
+
+
+    public AsoMarkdownEditor()
+    {
+        BrushConverter bc = new BrushConverter();
+        MenuBackground = (Brush)bc.ConvertFrom("#F8F9FA");
+    }
+
+    static AsoMarkdownEditor()
+    {
+        DefaultStyleKeyProperty.OverrideMetadata(typeof(AsoMarkdownEditor), new FrameworkPropertyMetadata(typeof(AsoMarkdownEditor)));
+    }
+
+    public override void OnApplyTemplate()
+    {
+        var exception = new System.Exception($"Ошибка {OnApplyTemplate}");
+
+        OpenFileItem = GetTemplateChild("OpenFileItem") as MenuItem ?? throw exception;
+        AddImageItem = GetTemplateChild("AddImageItem") as MenuItem ?? throw exception;
+        AddLinkItem = GetTemplateChild("AddLinkItem") as MenuItem ?? throw exception;
+        AddTableItem = GetTemplateChild("AddTableItem") as MenuItem ?? throw exception;
+        BoldItem = GetTemplateChild("BoldItem") as MenuItem ?? throw exception;
+        ItalicItem = GetTemplateChild("ItalicItem") as MenuItem ?? throw exception;
+        StrikethroughItem = GetTemplateChild("StrikethroughItem") as MenuItem ?? throw exception;
+        UnderlineItem = GetTemplateChild("UnderlineItem") as MenuItem ?? throw exception;
+        SaveFileItem = GetTemplateChild("SaveFileItem") as MenuItem ?? throw exception;
+        CodeBlockItem = GetTemplateChild("CodeBlockItem") as MenuItem ?? throw exception;
+        HeadingItem = GetTemplateChild("HeadingItem") as MenuItem ?? throw exception;
+        BulletedListItem = GetTemplateChild("BulletedListItem") as MenuItem ?? throw exception;
+        NumberedListItem = GetTemplateChild("NumberedListItem") as MenuItem ?? throw exception;
+        QuoteItem = GetTemplateChild("QuoteItem") as MenuItem ?? throw exception;
+        RedoItem = GetTemplateChild("RedoItem") as MenuItem ?? throw exception;
+        UndoItem = GetTemplateChild("UndoItem") as MenuItem ?? throw exception;
+        HelpItem = GetTemplateChild("HelpItem") as MenuItem ?? throw exception;
+    }
+
+    public void openFileItem_Click(object sender, RoutedEventArgs e)
+    {
+        OpenFileDialog openFileDialog = new OpenFileDialog();
+        openFileDialog.Filter = "Файлы Markdown  (*.md)|*.md";
+        if (openFileDialog.ShowDialog() == true)
+            Text = File.ReadAllText(openFileDialog.FileName);
+    }
+
+    public void saveFileItemItem_Click(object sender, RoutedEventArgs e)
+    {
+        SaveFileDialog saveFileDialog = new SaveFileDialog();
+        saveFileDialog.Filter = "Файлы Markdown  (*.md)|*.md";
+        if (saveFileDialog.ShowDialog() == true)
+        {
+            string filename = saveFileDialog.FileName;
+            File.WriteAllText(filename, Text);
+        }
+    }
+
+    public void addImageItem_Click(object sender, RoutedEventArgs e)
+    {
+        InputTextDialog inputTextDialog = new InputTextDialog("Введите ссылку", "добавить", "отменить");
+        if (inputTextDialog.ShowDialog() == true)
+        {
+            SelectedText = $"![]({inputTextDialog.Text})";
+        }
+    }
+
+    public void addLinkItem_Click(object sender, RoutedEventArgs e)
+    {
+        InputTextDialog inputTextDialog = new InputTextDialog("Введите ссылку на изображение", "добавить", "отменить");
+        if (inputTextDialog.ShowDialog() == true)
+        {
+            SelectedText = $"[]({inputTextDialog.Text})";
+        }
+    }
+
+    public void addTableItem_Click(object sender, RoutedEventArgs e)
+    {
+        InputTwoNumbersDialog inputTwoNumbersDialog = new InputTwoNumbersDialog("Введите кол-во колонок/строк таблицы", "добавить", "отменить");
+        if (inputTwoNumbersDialog.ShowDialog() == true)
+        {
+            int a = inputTwoNumbersDialog.NumberOne;
+            int b = inputTwoNumbersDialog.NumberTwo;
+            string table = "";
+
+            table += "\n|";
+            for (int j = 0; j < a; j++)
+            {
+                table += "  |";
+            }
+            table += "\n|";
+            for (int j = 0; j < a; j++)
+            {
+                table += "--|";
+            }
+
+            for (int i = 0; i < b - 1; i++)
+            {
                 table += "\n|";
                 for (int j = 0; j < a; j++)
                 {
                     table += "  |";
                 }
-                table += "\n|";
-                for (int j = 0; j < a; j++)
-                {
-                    table += "--|";
-                }
-
-                for (int i = 0; i < b - 1; i++)
-                {
-                    table += "\n|";
-                    for (int j = 0; j < a; j++)
-                    {
-                        table += "  |";
-                    }
-                }
-                SelectedText = table;
             }
+            SelectedText = table;
         }
+    }
 
-        public void boldItem_Click(object sender, RoutedEventArgs e)
+    public void boldItem_Click(object sender, RoutedEventArgs e)
+    {
+        SelectedText = $"**{SelectedText}**";
+    }
+
+    public void italicItem_Click(object sender, RoutedEventArgs e)
+    {
+        SelectedText = $"*{SelectedText}*";
+    }
+
+    public void strikethroughItem_Click(object sender, RoutedEventArgs e)
+    {
+        SelectedText = $"~~{SelectedText}~~";
+    }
+
+    public void underlineItem_Click(object sender, RoutedEventArgs e)
+    {
+        SelectedText = $"++{SelectedText}++";
+    }
+
+    public void codeBlockItem_Click(object sender, RoutedEventArgs e)
+    {
+        SelectedText = $"```\n{SelectedText}\n```";
+    }
+
+    public void headingItem_Click(object sender, RoutedEventArgs e)
+    {
+        int start = SelectionStart;
+        if (start == 0)
         {
-            SelectedText = $"**{SelectedText}**";
+            SelectedText = $"# {SelectedText}";
         }
-
-        public void italicItem_Click(object sender, RoutedEventArgs e)
+        else
         {
-            SelectedText = $"*{SelectedText}*";
-        }
-
-        public void strikethroughItem_Click(object sender, RoutedEventArgs e)
-        {
-            SelectedText = $"~~{SelectedText}~~";
-        }
-
-        public void underlineItem_Click(object sender, RoutedEventArgs e)
-        {
-            SelectedText = $"++{SelectedText}++";
-        }
-
-        public void codeBlockItem_Click(object sender, RoutedEventArgs e)
-        {
-            SelectedText = $"```\n{SelectedText}\n```";
-        }
-
-        public void headingItem_Click(object sender, RoutedEventArgs e)
-        {
-            int start = SelectionStart;
-            if (start == 0)
+            for (int i = start - 1; i >= 0; i--)
             {
-                SelectedText = $"# {SelectedText}";
-            }
-            else
-            {
-                for (int i = start - 1; i >= 0; i--)
+                if (Text[i] == '\n')
                 {
-                    if (Text[i] == '\n')
-                    {
-                        SelectionStart = i + 1;
-                        SelectedText = $"# {SelectedText}";
-                        break;
-                    }
-                    else if (i == 0)
-                    {
-                        SelectionStart = i;
-                        SelectedText = $"# {SelectedText}";
-                        break;
-                    }
+                    SelectionStart = i + 1;
+                    SelectedText = $"# {SelectedText}";
+                    break;
+                }
+                else if (i == 0)
+                {
+                    SelectionStart = i;
+                    SelectedText = $"# {SelectedText}";
+                    break;
                 }
             }
-            int length = SelectionLength;
-            this.SelectionLength = 0;
-            SelectionStart = length;
         }
+        int length = SelectionLength;
+        this.SelectionLength = 0;
+        SelectionStart = length;
+    }
 
-        public void numberedListItem_Click(object sender, RoutedEventArgs e)
-        {
-            SelectedText = "1. " + SelectedText.Replace("\n", "\n1. ");
-        }
+    public void numberedListItem_Click(object sender, RoutedEventArgs e)
+    {
+        SelectedText = "1. " + SelectedText.Replace("\n", "\n1. ");
+    }
 
-        public void bulletedListItem_Click(object sender, RoutedEventArgs e)
-        {
-            SelectedText = "* " + SelectedText.Replace("\n", "\n* ");
+    public void bulletedListItem_Click(object sender, RoutedEventArgs e)
+    {
+        SelectedText = "* " + SelectedText.Replace("\n", "\n* ");
 
-        }
+    }
 
-        public void quoteItem_Click(object sender, RoutedEventArgs e)
-        {
-            SelectedText = ">" + SelectedText.Replace("\n", "\n>");
-        }
+    public void quoteItem_Click(object sender, RoutedEventArgs e)
+    {
+        SelectedText = ">" + SelectedText.Replace("\n", "\n>");
+    }
 
-        public void undoItem_Click(object sender, RoutedEventArgs e)
-        {
-            Undo();
-        }
+    public void undoItem_Click(object sender, RoutedEventArgs e)
+    {
+        Undo();
+    }
 
-        public void redoItem_Click(object sender, RoutedEventArgs e)
-        {
-            Redo();
-        }
+    public void redoItem_Click(object sender, RoutedEventArgs e)
+    {
+        Redo();
+    }
 
-        public void helpItem_Click(object sender, RoutedEventArgs e)
-        {
-            MarkdownInfoWindow window = new MarkdownInfoWindow();
-            window.Show();
-        }
+    public void helpItem_Click(object sender, RoutedEventArgs e)
+    {
+        MarkdownInfoWindow window = new MarkdownInfoWindow();
+        window.Show();
     }
 }

@@ -3,52 +3,55 @@ using System.IO;
 using System.Windows.Controls;
 
 namespace ASO.Markdown.Controls;
-
 public partial class AsoMarkdownWebViewer : UserControl
 {
-    private string _Path = string.Empty;
+    private string _path = string.Empty;
     public string Path
     {
-        get { return _Path; }
+        get { return _path; }
         set
         {
-            _Path = value;
-            Markdown = File.ReadAllText(_Path);
+            _path = value;
+            Markdown = File.ReadAllText(_path);
         }
     }
 
-    private MarkdownPipeline _Pipeline = new MarkdownPipelineBuilder()
+    private MarkdownPipeline _pipeline = new MarkdownPipelineBuilder()
         .UseSelfPipeline()
         .Build();
     public MarkdownPipeline Pipeline
     {
-        get { return _Pipeline; }
-        set { _Pipeline = value; }
+        get { return _pipeline; }
+        set { _pipeline = value; }
     }
 
-    private string? _Markdown;
-    public string? Markdown
+    private string _markdown;
+    public string Markdown
     {
-        get { return _Markdown; }
+        get { return _markdown; }
         set
         {
-            _Markdown = value;
+            _markdown = value;
             DocumentUpdate();
         }
     }
+
+    private bool EnsureCore = false;
 
 
     public AsoMarkdownWebViewer()
     {
         InitializeComponent();
-
-        Viewer.EnsureCoreWebView2Async();
     }
 
     private async void DocumentUpdate()
     {
-        await Viewer.EnsureCoreWebView2Async();
-        var html = Markdig.Markdown.ToHtml(_Markdown ?? string.Empty, _Pipeline);
+        if (!EnsureCore)
+        {
+            await Viewer.EnsureCoreWebView2Async();
+        }
+        
+        var html = Markdig.Markdown.ToHtml(Markdown, Pipeline);
         Viewer.NavigateToString(html);
     }
 }
