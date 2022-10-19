@@ -28,7 +28,10 @@ public enum IconType
     BulletedLis,
     AlignCenter,
     AlignRight,
-    AlignLeft
+    AlignLeft,
+    Play,
+    Pause,
+    VolumeUp
 }
 
 public static class IconLibrary
@@ -59,7 +62,10 @@ public static class IconLibrary
         [IconType.BulletedLis]  = "\ue967",
         [IconType.AlignCenter]  = "\ue948",
         [IconType.AlignLeft]    = "\ue947",
-        [IconType.AlignRight]   = "\ue946"
+        [IconType.AlignRight]   = "\ue946",
+        [IconType.Play]         = "\ue9b3",
+        [IconType.Pause]        = "\ue9b2",
+        [IconType.VolumeUp]     = "\ue977"
     };
 }
 
